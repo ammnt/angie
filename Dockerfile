@@ -42,7 +42,7 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --no-create-home \
 && cd /tmp && git clone --recursive --depth 1 https://github.com/quictls/openssl && hg clone http://hg.nginx.org/njs \
 && cd /tmp/njs && ./configure && make -j "${NB_CORES}" && make clean \
-&& mkdir /var/cache/angie && cd /tmp/angie && ./auto/configure \
+&& mkdir /var/cache/angie && cd /tmp/angie && ./configure \
     --prefix=/etc/angie \
     --sbin-path=/usr/sbin/angie \
     --user=angie \
