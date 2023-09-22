@@ -2,12 +2,12 @@ name: Build and push image📦
 
 on:
   workflow_dispatch:
-  # schedule:
-  #  - cron: "00 17 * * SAT"
+  schedule:
+    - cron: "00 17 * * SAT"
   push:
     branches: ["http3"]
-  pull_request:
-    branches: ["http3"]
+  # pull_request:
+  #  branches: ["http3"]
 
 env:
   REGISTRY: ghcr.io
@@ -113,5 +113,5 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           script: |
             cd /home/${{ secrets.SERVER_USERNAME }}/agh
-            docker-compose pull nginx dns
-            docker-compose up -d nginx dns
+            docker-compose pull web dns
+            docker-compose up -d web dns
