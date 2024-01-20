@@ -65,8 +65,8 @@ jobs:
             ${{ steps.meta.outputs.tags }}
             ammnt/angie:http3
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # cache-from: type=gha
+          # cache-to: type=gha,mode=max
 
       - name: Test the Docker image
         run: |
@@ -85,8 +85,8 @@ jobs:
             ${{ steps.meta.outputs.tags }}
             ammnt/angie:http3
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # cache-from: type=gha
+          # cache-to: type=gha,mode=max
 
       - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
@@ -105,7 +105,7 @@ jobs:
             ammnt/angie:@${{ steps.push.outputs.digest }}
 
       - name: Run deploy update on the server
-        uses: appleboy/ssh-action@v1.0.1
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
