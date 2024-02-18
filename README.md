@@ -7,7 +7,7 @@ or<br>
 
 # Description:
 
-- Based on latest version of Alpine Linux - low size (~8 MB);
+- Based on latest version of Alpine Linux - low size (~5 MB);
 - QuicTLS with kTLS module:<br>
 https://github.com/quictls/openssl
 - HTTP/3 + QUIC native support;
@@ -24,6 +24,7 @@ https://github.com/quictls/openssl
 - Removed unnecessary modules;
 - Added OCI labels and annotations;
 - No excess ENTRYPOINT in the image;
+- Slimmed version by Docker Slim tool;
 - Prioritize ChaCha cipher patch and anonymous signature - removed "Server" header ("banner"):<br>
 https://github.com/ammnt/angie/blob/http3/Dockerfile
 

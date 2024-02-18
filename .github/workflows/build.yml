@@ -26,10 +26,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.1.1
 
-      - name: Install cosign
-        if: github.event_name != 'pull_request'
-        uses: sigstore/cosign-installer@v3.4.0
-
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v3.0.0
 
@@ -65,44 +61,42 @@ jobs:
             ${{ steps.meta.outputs.tags }}
             ammnt/angie:http3
           labels: ${{ steps.meta.outputs.labels }}
-          # cache-from: type=gha
-          # cache-to: type=gha,mode=max
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Slim the Docker image
+        uses: kitabisa/docker-slim-action@v1.0.3
+        env:
+          DSLIM_HTTP_PROBE: false
+        with:
+          target: ammnt/angie:http3
+          tag: ammnt/angie:http3
+          overwrite: true
+
+      - name: Slim the Docker image for GHCR
+        uses: kitabisa/docker-slim-action@v1.0.3
+        env:
+          DSLIM_HTTP_PROBE: false
+        with:
+          target: ghcr.io/ammnt/angie:http3
+          tag: ghcr.io/ammnt/angie:http3
+          overwrite: true
+
+      - name: Debug Docker information
+        run: |
+          docker version
+          docker info
+          docker images
 
       - name: Test the Docker image
         run: |
-          docker run --name angie --restart unless-stopped -p 127.0.0.1:8080:8080/tcp -d ammnt/angie:http3
-          curl -vvv http://127.0.0.1:8080 || exit 1
+          docker run -idt -p 127.0.0.1:8080:8080/tcp ammnt/angie:http3
+          curl -i http://127.0.0.1:8080 || exit 1
 
-      - name: Push the Docker image
-        id: push
-        uses: docker/build-push-action@v5.1.0
-        with:
-          provenance: false
-          context: .
-          platforms: linux/amd64
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: |
-            ${{ steps.meta.outputs.tags }}
-            ammnt/angie:http3
-          labels: ${{ steps.meta.outputs.labels }}
-          # cache-from: type=gha
-          # cache-to: type=gha,mode=max
-
-      - name: Sign the published Docker image
-        if: ${{ github.event_name != 'pull_request' }}
-        env:
-          COSIGN_EXPERIMENTAL: "true"
+      - name: Push the Docker images
         run: |
-          cosign sign -y \
-            -a "repo=${{ github.repository }}" \
-            -a "workflow=${{ github.workflow }}" \
-            -a "ref=${{ github.sha }}" \
-            ghcr.io/ammnt/angie:@${{ steps.push.outputs.digest }}
-          cosign sign -y \
-            -a "repo=${{ github.repository }}" \
-            -a "workflow=${{ github.workflow }}" \
-            -a "ref=${{ github.sha }}" \
-            ammnt/angie:@${{ steps.push.outputs.digest }}
+          docker image push ammnt/angie:http3
+          docker image push ghcr.io/ammnt/angie:http3
 
       - name: Run deploy update on the server
         uses: appleboy/ssh-action@v1.0.3
