@@ -20,7 +20,7 @@ https://github.com/quictls/openssl
 - zlib library latest version;
 - Rootless master process - unprivileged container;
 - Async I/O threads module;
-- Healthcheck added;
+- Shell removed from the image;
 - Removed unnecessary modules;
 - Added OCI labels and annotations;
 - No excess ENTRYPOINT in the image;
