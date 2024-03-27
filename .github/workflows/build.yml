@@ -94,17 +94,17 @@ jobs:
             docker-compose pull web dns
             docker-compose up -d web dns
 
-      # - name: Get Digest of Docker images
-      #   run: |
-      #     DIGEST=$(docker inspect ghcr.io/ammnt/angie:http3 | jq -r '.[].RepoDigests[0] | split(":") | .[1]')
-      #     echo $DIGEST
+      - name: Get Digest of Docker images
+        run: |
+          DIGEST=$(docker inspect ghcr.io/ammnt/angie:http3 | jq -r '.[].RepoDigests[0] | split(":") | .[1]')
+          echo $DIGEST
 
-      # - name: Sign the published Docker image
-      #   if: ${{ github.event_name != 'pull_request' }}
-      #   env:
-      #     COSIGN_EXPERIMENTAL: "true"
-      #   run: cosign sign -y \
-      #       -a "repo=${{ github.repository }}" \
-      #       -a "workflow=${{ github.workflow }}" \
-      #       -a "ref=${{ github.sha }}" \
-      #       ghcr.io/ammnt/angie@sha256:${DIGEST}
+      - name: Sign the published Docker image
+        if: ${{ github.event_name != 'pull_request' }}
+        env:
+          COSIGN_EXPERIMENTAL: "true"
+        run: cosign sign -y \
+          -a "repo=${{ github.repository }}" \
+          -a "workflow=${{ github.workflow }}" \
+          -a "ref=${{ github.sha }}" \
+          ghcr.io/ammnt/angie@sha256:${DIGEST}
