@@ -43,8 +43,7 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --no-create-home \
 && cd /tmp && git clone --recursive --depth 1 https://github.com/quictls/openssl && hg clone http://hg.nginx.org/njs \
 && cd /tmp/njs && ./configure && make -j "${NB_CORES}" && make clean \
-&& mkdir -p /tmp/cache/angie/client_temp && mkdir /tmp/cache/angie/proxy_temp \
-&& mkdir /tmp/cache/angie/fastcgi_temp && cd /tmp/angie && ./configure \
+&& mkdir /var/cache/angie && cd /tmp/angie && ./configure \
     --prefix=/etc/angie \
     --sbin-path=/usr/sbin/angie \
     --user=angie \
@@ -54,9 +53,9 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
     --conf-path=/etc/angie/angie.conf \
     --pid-path=/tmp/angie.pid \
     --lock-path=/tmp/angie.lock \
-    --http-client-body-temp-path=/tmp/cache/angie/client_temp \
-    --http-proxy-temp-path=/tmp/cache/angie/proxy_temp \
-    --http-fastcgi-temp-path=/tmp/cache/angie/fastcgi_temp \
+    --http-client-body-temp-path=/var/cache/angie/client_temp \
+    --http-proxy-temp-path=/var/cache/angie/proxy_temp \
+    --http-fastcgi-temp-path=/var/cache/angie/fastcgi_temp \
     --with-openssl="/tmp/openssl" \
     --with-openssl-opt=enable-ktls \
     --with-openssl-opt=enable-ec_nistp_64_gcc_128 \
@@ -95,10 +94,10 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
     --without-mail_smtp_module \
     --add-module=/tmp/njs/nginx \
 && make -j "${NB_CORES}" && make install && make clean && strip /usr/sbin/angie* \
-&& chown -R angie:angie /tmp/cache/angie && chmod -R g+w /tmp/cache/angie \
+&& chown -R angie:angie /var/cache/angie && chmod -R g+w /var/cache/angie \
 && chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie \
 && update-ca-certificates && apk --purge del libgcc libstdc++ g++ make build-base linux-headers automake autoconf git talloc talloc-dev libtool zlib-dev binutils gnupg cmake mercurial go pcre-dev ca-certificates openssl libxslt-dev apk-tools \
-&& rm -rf /var/cache/apk/ /var/cache/misc /root/.gnupg /root/.cache /root/go /etc/apk \
+&& rm -rf /tmp/* /var/cache/apk/ /var/cache/misc /root/.gnupg /root/.cache /root/go /etc/apk \
 && ln -sf /dev/stdout /tmp/access.log && ln -sf /dev/stderr /tmp/error.log
 
 ENTRYPOINT [ "/sbin/tini", "--" ]
