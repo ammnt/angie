@@ -95,7 +95,7 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
     --without-mail_smtp_module \
     --add-module=/tmp/njs/nginx \
 && make -j "${NB_CORES}" && make install && make clean && strip /usr/sbin/angie* \
-&& chown -R angie:angie /var/tmp/angie && chmod -R g+w /tmp/cache/angie \
+&& chown -R angie:angie /tmp/cache/angie && chmod -R g+w /tmp/cache/angie \
 && chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie \
 && update-ca-certificates && apk --purge del libgcc libstdc++ g++ make build-base linux-headers automake autoconf git talloc talloc-dev libtool zlib-dev binutils gnupg cmake mercurial go pcre-dev ca-certificates openssl libxslt-dev apk-tools \
 && rm -rf /var/cache/apk/ /var/cache/misc /root/.gnupg /root/.cache /root/go /etc/apk \
