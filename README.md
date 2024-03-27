@@ -1,9 +1,7 @@
 # Angie with HTTP/3 and QUIC support🚀
 
 The Docker image is ready to use:<br>
-<code>docker pull ghcr.io/ammnt/angie:http3</code><br>
-or<br>
-<code>docker pull ammnt/angie:http3</code>
+<code>docker run --name angie --restart unless-stopped -p 80:8080/tcp -d ghcr.io/ammnt/angie:http3</code><br>
 
 # Description:
 
@@ -20,7 +18,7 @@ https://github.com/quictls/openssl
 - zlib library latest version;
 - Rootless master process - unprivileged container;
 - Async I/O threads module;
-- Shell removed from the image;
+- "Distroless" image - shell removed from the image;
 - Removed unnecessary modules;
 - Added OCI labels and annotations;
 - No excess ENTRYPOINT in the image;
