@@ -1,7 +1,7 @@
 # Angie with HTTP/3 and QUIC support🚀
 
 The Docker image is ready to use:<br>
-<code>docker run --name angie --restart unless-stopped -p 80:8080/tcp -d ghcr.io/ammnt/angie:http3</code><br>
+<code>docker pull ghcr.io/ammnt/angie:http3</code><br>
 
 # Description:
 
