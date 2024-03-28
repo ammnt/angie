@@ -71,7 +71,7 @@ jobs:
 
       - name: Test the Docker image
         run: |
-          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
+          docker run --rm ghcr.io/ammnt/angie:http3
 
       - name: Push the Docker images
         run: docker image push ghcr.io/ammnt/angie:http3
