@@ -69,10 +69,10 @@ jobs:
           tag: ghcr.io/ammnt/angie:http3
           overwrite: true
 
-      # - name: Test the Docker image
-      #   run: |
-      #     docker run --rm -p 127.0.0.1:8080:8080/tcp ghcr.io/ammnt/angie:http3
-      #     curl -i http://127.0.0.1:8080
+      - name: Test the Docker image
+        run: |
+          docker run --rm -p 127.0.0.1:8080:8080/tcp ghcr.io/ammnt/angie:http3
+          curl -i http://127.0.0.1:8080
 
       - name: Push the Docker images
         run: docker image push ghcr.io/ammnt/angie:http3

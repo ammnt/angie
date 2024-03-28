@@ -38,6 +38,9 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && sed -i -e 's@NGINX_VERSION      ".*"@NGINX_VERSION      " "@g' /tmp/angie/src/core/nginx.h \
 && sed -i -e 's@ANGIE_VERSION      ".*"@ANGIE_VERSION      " "@g' /tmp/angie/src/core/angie.h \
 && sed -i -e 's/listen       80;/listen 8080;/g' /tmp/angie/conf/angie.conf \
+&& sed -i -e 's@#tcp_nopush     on;@client_body_temp_path /tmp/client_temp;@g' angie.conf \
+&& sed -i -e 's@#keepalive_timeout  0;@proxy_temp_path /tmp/proxy_temp;@g' angie.conf \
+&& sed -i -e 's@#gzip  on;@fastcgi_temp_path /tmp/fastcgi_temp;@g' angie.conf \
 && sed -i -e '1i pid /tmp/angie.pid;\n' /tmp/angie/conf/angie.conf \
 && sed -i -e 's/SSL_OP_CIPHER_SERVER_PREFERENCE);/SSL_OP_CIPHER_SERVER_PREFERENCE | SSL_OP_PRIORITIZE_CHACHA);/g' /tmp/angie/src/event/ngx_event_openssl.c \
 && addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --no-create-home \
