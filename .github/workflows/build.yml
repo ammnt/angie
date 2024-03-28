@@ -90,7 +90,7 @@ jobs:
 
       - name: Push the Docker images to docker.io
         run: |
-          docker tag ghcr.io/ammnt/angie:http3 ammnt/nginx:http3
+          docker tag ghcr.io/ammnt/angie:http3 ammnt/angie:http3
           docker push ammnt/angie:http3
 
       - name: Sign the published Docker image
