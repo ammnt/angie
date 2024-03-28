@@ -99,7 +99,7 @@ jobs:
           COSIGN_EXPERIMENTAL: "true"
         run: |
           cosign sign ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
-          cosign sign docker.io/ammnt/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
+          cosign sign docker.io/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
 
       - name: Run deploy update on the server
         uses: appleboy/ssh-action@v1.0.3
