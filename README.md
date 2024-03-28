@@ -2,6 +2,8 @@
 
 The Docker image is ready to use:<br>
 <code>docker pull ghcr.io/ammnt/angie:http3</code><br>
+or<br>
+<code>docker pull ammnt/angie:http3</code><br>
 
 # Description:
 
