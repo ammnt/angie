@@ -1,23 +1,23 @@
-# Angie with HTTP/3 and QUIC support🚀
+# Distroless Angie with HTTP/3 and QUIC support🚀
 
 The Docker image is ready to use:<br>
-<code>docker pull ghcr.io/ammnt/angie:http3</code><br>
+<code>docker run -d --rm -p 127.0.0.1:8080:8080/tcp ghcr.io/ammnt/angie:http3</code><br>
 or<br>
-<code>docker pull ammnt/angie:http3</code><br>
+<code>docker run -d --rm -p 127.0.0.1:8080:8080/tcp ammnt/angie:http3</code>
 
 # Description:
 
 - Based on latest version of Alpine Linux - low size (~5 MB);
 - QuicTLS with kTLS module:<br>
 https://github.com/quictls/openssl
-- HTTP/3 + QUIC native support;
+- HTTP/3 and QUIC native support;
 - HTTP/2 with ALPN support;
 - TLS 1.3 and 0-RTT support;
 - TLS 1.2 and TCP Fast Open (TFO) support;
 - Built using hardening GCC flags;
 - NJS support;
 - PCRE with JIT compilation;
-- zlib library latest version;
+- zlib-ng library latest version;
 - Rootless master process - unprivileged container;
 - Async I/O threads module;
 - "Distroless" image - shell removed from the image;
