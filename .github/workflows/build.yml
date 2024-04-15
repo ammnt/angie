@@ -93,6 +93,7 @@ jobs:
           exit-code: true
           sarif-file: sarif.output.json
           summary: true
+          github-token: ${{ secrets.GH_TOKEN }}
 
       - name: Upload SARIF result💾
         id: upload-sarif
