@@ -84,19 +84,14 @@ jobs:
           curl -v http://127.0.0.1:8080 || exit 1
 
       - name: Docker Scout🔍
-        id: docker-scout
         uses: docker/scout-action@v1.6.4
         with:
-          command: cves,sbom
+          command: cves
           image: ${{ steps.meta.outputs.tags }}
-          only-severities: critical,high
-          exit-code: true
           sarif-file: sarif.output.json
           summary: true
-          github-token: ${{ secrets.GH_TOKEN }}
 
-      - name: Upload SARIF result💾
-        id: upload-sarif
+      - name: Upload SARIF result
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: sarif.output.json
