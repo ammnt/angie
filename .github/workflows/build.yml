@@ -94,7 +94,7 @@ jobs:
 
       - name: Upload SARIF result💾
         id: upload-sarif
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: sarif.output.json
 
