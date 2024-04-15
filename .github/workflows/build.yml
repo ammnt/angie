@@ -91,6 +91,8 @@ jobs:
           image: ${{ steps.meta.outputs.tags }}
           only-severities: critical,high
           exit-code: true
+          sarif-file: sarif.output.json
+          summary: true
 
       - name: Upload SARIF result💾
         id: upload-sarif
