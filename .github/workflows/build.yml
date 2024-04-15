@@ -18,23 +18,22 @@ jobs:
     if: github.actor == 'ammnt'
     runs-on: ubuntu-latest
     permissions:
-      actions: write
       contents: read
       packages: write
       id-token: write
 
     steps:
-      - name: Checkout repository🏷️
+      - name: Checkout repository
         uses: actions/checkout@v4.1.2
 
-      - name: Install cosign🔒
+      - name: Install cosign
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@v3.5.0
 
-      - name: Setup Docker buildx🧱
+      - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v3.3.0
 
-      - name: Log into ${{ env.REGISTRY }}🔑
+      - name: Log into ${{ env.REGISTRY }}
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v3.1.0
         with:
@@ -42,19 +41,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Log into Docker Hub🔑
+      - name: Log into Docker Hub
         uses: docker/login-action@v3.1.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract Docker metadataℹ️
+      - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v5.5.1
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
-      - name: Build the Docker image🚀
+      - name: Build the Docker image
         id: build
         uses: docker/build-push-action@v5.3.0
         with:
@@ -67,7 +66,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Slim the Docker image🏁
+      - name: Slim the Docker image
         uses: kitabisa/docker-slim-action@v1.1.1
         env:
           DSLIM_HTTP_PROBE: false
@@ -75,42 +74,29 @@ jobs:
           target: ghcr.io/ammnt/angie:http3
           tag: ghcr.io/ammnt/angie:http3
           overwrite: true
-      - run: echo "${REPORT}"🧾
+      - run: echo "${REPORT}"
         env:
           REPORT: ${{ steps.slim.outputs.report }}
 
-      - name: Test the Docker image🧪
+      - name: Test the Docker image
         run: |
           docker run -d --rm -p 127.0.0.1:8080:8080/tcp ghcr.io/ammnt/angie:http3
           curl -v http://127.0.0.1:8080 || exit 1
 
-      - name: Docker Scout🔍
-        id: docker-scout
-        uses: docker/scout-action@v1.6.4
+      - name: Scan the Docker image
+        uses: anchore/sbom-action@v0.15.10
         with:
-          command: cves,sbom
-          image: ${{ steps.meta.outputs.tags }}
-          only-severities: critical,high
-          exit-code: true
-          sarif-file: sarif.output.json
-          summary: true
-          github-token: ${{ secrets.GH_TOKEN }}
+          image: ghcr.io/ammnt/angie:http3
 
-      - name: Upload SARIF result💾
-        id: upload-sarif
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: sarif.output.json
-
-      - name: Push the Docker images to ghcr.io⛓️
+      - name: Push the Docker images to ghcr.io
         run: docker push ghcr.io/ammnt/angie:http3
 
-      - name: Push the Docker images to docker.io⛓️
+      - name: Push the Docker images to docker.io
         run: |
           docker tag ghcr.io/ammnt/angie:http3 ammnt/angie:http3
           docker push ammnt/angie:http3
 
-      - name: Sign the published Docker image🔐
+      - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
         env:
           COSIGN_EXPERIMENTAL: "true"
@@ -118,7 +104,7 @@ jobs:
           cosign sign ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
           cosign sign docker.io/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
 
-      - name: Run deploy update on the server✅
+      - name: Run deploy update on the server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
