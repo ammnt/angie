@@ -87,7 +87,7 @@ jobs:
         id: docker-scout
         uses: docker/scout-action@v1.6.4
         with:
-          command: cves,recommendations,sbom
+          command: cves,sbom
           image: ${{ steps.meta.outputs.tags }}
           only-severities: critical,high
           exit-code: true
