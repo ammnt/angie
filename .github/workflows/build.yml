@@ -74,7 +74,7 @@ jobs:
           target: ghcr.io/ammnt/angie:http3
           tag: ghcr.io/ammnt/angie:http3
           overwrite: true
-      - run: echo "${REPORT}"
+      - run: echo "${REPORT}"🧾
         env:
           REPORT: ${{ steps.slim.outputs.report }}
 
