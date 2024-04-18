@@ -22,15 +22,16 @@ jobs:
       packages: write
       id-token: write
       checks: write
-      # deployments: read|write|none
-      # issues: read|write|none
-      # discussions: read|write|none
-      # packages: read|write|none
-      # pages: read|write|none
-      # pull-requests: read|write|none
-      # repository-projects: read|write|none
-      # security-events: read|write|none
-      # statuses: read|write|none
+      actions: write
+      # deployments: write
+      # issues: write
+      # discussions: write
+      # packages: write
+      # pages: write
+      # pull-requests: write
+      # repository-projects: write
+      security-events: write
+      # statuses: write
 
     steps:
       - name: Checkout repository
