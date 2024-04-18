@@ -99,7 +99,7 @@ jobs:
         if: ${{ github.event_name != 'pull_request_target' }}
         uses: docker/scout-action@v1
         with:
-          command: cves,recommendations,sbom
+          command: cves,sbom
           image: ghcr.io/ammnt/angie:http3
           sarif-file: sarif.output.json
           summary: true
