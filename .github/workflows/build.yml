@@ -18,10 +18,19 @@ jobs:
     if: github.actor == 'ammnt'
     runs-on: ubuntu-latest
     permissions:
-      actions: write
-      contents: write
+      contents: read
       packages: write
       id-token: write
+      checks: write
+      # deployments: read|write|none
+      # issues: read|write|none
+      # discussions: read|write|none
+      # packages: read|write|none
+      # pages: read|write|none
+      # pull-requests: read|write|none
+      # repository-projects: read|write|none
+      # security-events: read|write|none
+      # statuses: read|write|none
 
     steps:
       - name: Checkout repository
@@ -89,7 +98,7 @@ jobs:
         if: ${{ github.event_name != 'pull_request_target' }}
         uses: docker/scout-action@v1
         with:
-          command: cves
+          command: cves,recommendations,sbom
           image: ghcr.io/ammnt/angie:http3
           sarif-file: sarif.output.json
           summary: true
