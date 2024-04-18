@@ -18,6 +18,7 @@ jobs:
     if: github.actor == 'ammnt'
     runs-on: ubuntu-latest
     permissions:
+      actions: write
       contents: read
       packages: write
       id-token: write
@@ -96,7 +97,7 @@ jobs:
       - name: Upload SARIF result
         id: upload-sarif
         if: ${{ github.event_name != 'pull_request_target' }}
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: sarif.output.json
 
