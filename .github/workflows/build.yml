@@ -83,10 +83,15 @@ jobs:
           docker run -d --rm -p 127.0.0.1:8080:8080/tcp ghcr.io/ammnt/angie:http3
           curl -v http://127.0.0.1:8080 || exit 1
 
-      - name: Scan the Docker image
-        uses: anchore/sbom-action@v0.15.10
+      - name: Analyze for critical and high CVEs
+        id: docker-scout-cves
+        if: ${{ github.event_name != 'pull_request_target' }}
+        uses: docker/scout-action@v1
         with:
+          command: cves
           image: ghcr.io/ammnt/angie:http3
+          sarif-file: sarif.output.json
+          summary: true
 
       - name: Push the Docker images to ghcr.io
         run: docker push ghcr.io/ammnt/angie:http3
