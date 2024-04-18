@@ -21,17 +21,7 @@ jobs:
       contents: read
       packages: write
       id-token: write
-      checks: write
-      actions: write
-      # deployments: write
-      # issues: write
-      # discussions: write
-      # packages: write
-      # pages: write
-      # pull-requests: write
-      # repository-projects: write
       security-events: write
-      # statuses: write
 
     steps:
       - name: Checkout repository
