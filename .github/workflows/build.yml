@@ -17,11 +17,7 @@ jobs:
   build:
     if: github.actor == 'ammnt'
     runs-on: ubuntu-latest
-    permissions:
-      actions: write
-      contents: read
-      packages: write
-      id-token: write
+    permissions: write-all
 
     steps:
       - name: Checkout repository
