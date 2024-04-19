@@ -6,8 +6,8 @@ on:
   #  - cron: "00 17 * * SAT"
   push:
     branches: ["release/*"]
-  pull_request:
-    branches: ["release/*"]
+  # pull_request:
+  #  branches: ["release/*"]
 
 env:
   REGISTRY: ghcr.io
@@ -34,12 +34,9 @@ jobs:
       - name: Get branch name
         if: github.event_name != 'pull_request'
         shell: bash
-        run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF} | sed 's|release/||g')" >> $GITHUB_ENV
-
-      - name: Get branch name (pull request)
-        if: github.event_name == 'pull_request'
-        shell: bash
-        run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF} | sed 's|release/||g')" >> $GITHUB_ENV
+        run: |
+          echo ${GITHUB_HEAD_REF}
+          echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF} | sed 's|release/||g')" >> $GITHUB_ENV
 
       - name: Debug
         run: echo ${{ env.BRANCH_NAME }}
