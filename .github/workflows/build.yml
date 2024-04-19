@@ -79,8 +79,8 @@ jobs:
         env:
           DSLIM_HTTP_PROBE: false
         with:
-          target: ghcr.io/ammnt/angie:http3
-          tag: ghcr.io/ammnt/angie:http3
+          target: ghcr.io/ammnt/angie:${{ env.BRANCH_NAME }}
+          tag: ghcr.io/ammnt/angie:${{ env.BRANCH_NAME }}
           overwrite: true
       - run: echo "${REPORT}"
         env:
@@ -110,9 +110,13 @@ jobs:
 
       - name: Push the Docker images to registries💾
         run: |
-          docker push ghcr.io/ammnt/angie:http3
-          docker tag ghcr.io/ammnt/angie:http3 ammnt/angie:http3
-          docker push ammnt/angie:http3
+          docker push ghcr.io/ammnt/angie:${{ env.BRANCH_NAME }}
+          docker tag ghcr.io/ammnt/angie:${{ env.BRANCH_NAME }} ammnt/angie:${{ env.BRANCH_NAME }}
+          docker tag ghcr.io/ammnt/angie:${{ env.BRANCH_NAME }} ammnt/angie:latest
+          docker tag ghcr.io/ammnt/angie:${{ env.BRANCH_NAME }} ghcr.io/ammnt/angie:latest
+          docker push ammnt/angie:${{ env.BRANCH_NAME }}
+          docker push ammnt/angie:latest
+          docker push ghcr.io/ammnt/angie:latest
 
       - name: Sign the published Docker image🔐
         if: ${{ github.event_name != 'pull_request' }}
