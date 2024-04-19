@@ -31,9 +31,12 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@v3.5.0
 
-      - name: Get branch name
+      - name: Get branch name🔍
         if: github.event_name != 'pull_request'
-        run: echo "${GITHUB_REF#refs/heads/}"
+        run: |
+          echo "${GITHUB_REF#refs/heads/}" | sed 's|release/||g'
+          echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | sed 's|release/||g')" >> $GITHUB_ENV
+          echo ${{ env.BRANCH_NAME }}
 
       - name: Setup Docker buildx🛠️
         uses: docker/setup-buildx-action@v3.3.0
