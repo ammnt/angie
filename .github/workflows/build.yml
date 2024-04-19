@@ -33,13 +33,7 @@ jobs:
 
       - name: Get branch name
         if: github.event_name != 'pull_request'
-        shell: bash
-        run: |
-          echo ${GITHUB_HEAD_REF}
-          echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF} | sed 's|release/||g')" >> $GITHUB_ENV
-
-      - name: Debug
-        run: echo ${{ env.BRANCH_NAME }}
+        run: echo "${GITHUB_REF#refs/heads/}"
 
       - name: Setup Docker buildx🛠️
         uses: docker/setup-buildx-action@v3.3.0
