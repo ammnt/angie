@@ -5,9 +5,9 @@ on:
   # schedule:
   #  - cron: "00 17 * * SAT"
   push:
-    branches: ["relese/*"]
+    branches: ["release/*"]
   pull_request:
-    branches: ["relese/*"]
+    branches: ["release/*"]
 
 env:
   REGISTRY: ghcr.io
