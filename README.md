@@ -1,9 +1,9 @@
 # Distroless Angie with HTTP/3 and QUIC support🚀
 
 The Docker image is ready to use:<br>
-<code>docker run -d --rm -p 127.0.0.1:8080:8080/tcp ghcr.io/ammnt/angie:http3</code><br>
+<code>docker run -d --rm -p 127.0.0.1:8080:8080/tcp ghcr.io/ammnt/angie:latest</code><br>
 or<br>
-<code>docker run -d --rm -p 127.0.0.1:8080:8080/tcp ammnt/angie:http3</code>
+<code>docker run -d --rm -p 127.0.0.1:8080:8080/tcp ammnt/angie:latest</code>
 
 # Description:
 
