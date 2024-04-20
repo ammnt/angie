@@ -74,7 +74,6 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
     --with-http_ssl_module \
     --with-http_v2_module \
     --with-http_v3_module \
-    --with-http_gzip_static_module \
     --with-stream \
     --with-stream_realip_module \
     --with-stream_ssl_module \
