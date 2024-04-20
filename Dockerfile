@@ -43,7 +43,7 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && sed -i -e 's@#gzip  on;@fastcgi_temp_path /tmp/fastcgi_temp;@g' /tmp/angie/conf/angie.conf \
 && sed -i -e '1i pid /tmp/angie.pid;\n' /tmp/angie/conf/angie.conf \
 && sed -i -e 's/SSL_OP_CIPHER_SERVER_PREFERENCE);/SSL_OP_CIPHER_SERVER_PREFERENCE | SSL_OP_PRIORITIZE_CHACHA);/g' /tmp/angie/src/event/ngx_event_openssl.c \
-&& addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --no-create-home \
+&& addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --uid 101 --no-create-home \
 && git clone --recursive --depth 1 https://github.com/quictls/openssl && hg clone https://hg.nginx.org/njs \
 && cd /tmp/njs && ./configure && make -j "${NB_CORES}" && make clean \
 && mkdir /var/cache/angie && cd /tmp/angie && ./configure \
@@ -74,6 +74,7 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
     --with-http_ssl_module \
     --with-http_v2_module \
     --with-http_v3_module \
+    --with-http_gzip_static_module \
     --with-stream \
     --with-stream_realip_module \
     --with-stream_ssl_module \
