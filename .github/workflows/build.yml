@@ -96,18 +96,23 @@ jobs:
         uses: aquasecurity/trivy-action@0.19.0
         with:
           image-ref: ghcr.io/ammnt/angie:main
-          format: "table"
-          exit-code: "1"
-          ignore-unfixed: true
-          vuln-type: "os,library"
-          severity: "CRITICAL,HIGH"
+          scan-type: image
+          format: "github"
+          output: "dependency-results.sbom.json"
+          severity: "MEDIUM,HIGH,CRITICAL"
+          scanners: "vuln"
 
-      - name: Upload trivy report as a Github artifact📊
+      - name: Upload Trivy report as a Github artifact📊
         uses: actions/upload-artifact@v4.3.3
         with:
           name: trivy-sbom-report
           path: "${{ github.workspace }}/dependency-results.sbom.json"
           retention-days: 20
+
+      - name: Upload Trivy scan results to GitHub Security tab📊
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: "trivy-results.sarif"
 
       - name: Push the Docker images to registries💾
         run: |
