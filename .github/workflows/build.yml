@@ -73,9 +73,6 @@ jobs:
           target: ghcr.io/ammnt/angie:main
           tag: ghcr.io/ammnt/angie:main
           overwrite: true
-      - run: echo "${REPORT}"
-        env:
-          REPORT: ${{ steps.slim.outputs.report }}
 
       - name: Test the Docker image🧪
         run: |
@@ -98,7 +95,7 @@ jobs:
       - name: Run Trivy vulnerability scanner💊
         uses: aquasecurity/trivy-action@0.19.0
         with:
-          image-ref: ghcr.io/ammnt/angie@${{ steps.build.outputs.digest }}
+          image-ref: ghcr.io/ammnt/angie:main
           format: "table"
           exit-code: "1"
           ignore-unfixed: true
