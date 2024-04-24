@@ -108,11 +108,11 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 ENTRYPOINT [ "/sbin/tini", "--" ]
 
 EXPOSE 8080/tcp 8443/tcp 8443/udp
-LABEL description="Angie built with QUIC and HTTP/3 support🚀" \
+LABEL description="Distroless Angie built with QUIC and HTTP/3 support🚀" \
       maintainer="ammnt <admin@msftcnsi.com>" \
-      org.opencontainers.image.description="Angie built with QUIC and HTTP/3 support🚀" \
+      org.opencontainers.image.description="Distroless Angie built with QUIC and HTTP/3 support🚀" \
       org.opencontainers.image.authors="ammnt, admin@msftcnsi.com" \
-      org.opencontainers.image.title="Angie built with QUIC and HTTP/3 support🚀" \
+      org.opencontainers.image.title="Distroless Angie built with QUIC and HTTP/3 support🚀" \
       org.opencontainers.image.source="https://github.com/ammnt/angie/"
 
 STOPSIGNAL SIGQUIT
