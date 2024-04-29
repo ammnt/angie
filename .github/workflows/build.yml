@@ -103,7 +103,7 @@ jobs:
           scanners: "vuln"
 
       - name: Upload Trivy report as a Github artifact📊
-        uses: actions/upload-artifact@v4.3.3
+        uses: actions/upload-artifact@v4
         with:
           name: trivy-sbom-report
           path: "${{ github.workspace }}/dependency-results.sbom.json"
@@ -115,7 +115,7 @@ jobs:
           syft-version: v1.3.0
           image: ghcr.io/ammnt/angie:main
           artifact-name: image.spdx.json
-          dependency-snapshot: true
+          dependency-snapshot: false
 
       - name: Run Snyk to check Docker image for vulnerabilities🔍
         continue-on-error: true
