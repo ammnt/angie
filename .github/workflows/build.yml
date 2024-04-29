@@ -88,7 +88,7 @@ jobs:
           summary: true
 
       - name: Upload SARIF result📊
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: sarif.output.json
 
@@ -103,7 +103,7 @@ jobs:
           scanners: "vuln"
 
       - name: Upload Trivy report as a Github artifact📊
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.3.3
         with:
           name: trivy-sbom-report
           path: "${{ github.workspace }}/dependency-results.sbom.json"
@@ -127,7 +127,7 @@ jobs:
           args: --file=Dockerfile
 
       - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: snyk.sarif
 
