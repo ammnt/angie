@@ -112,6 +112,7 @@ jobs:
       - name: Scan the image and upload dependency results🔍
         uses: anchore/sbom-action@v0.15.11
         with:
+          syft-version: v1.3.0
           image: ghcr.io/ammnt/angie:main
           artifact-name: image.spdx.json
           dependency-snapshot: true
@@ -125,7 +126,7 @@ jobs:
           image: ghcr.io/ammnt/angie:main
           args: --file=Dockerfile
 
-      - name: Upload result to GitHub Code Scanning📊
+      - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: snyk.sarif
