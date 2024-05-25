@@ -135,14 +135,23 @@ jobs:
         run: |
           docker push ghcr.io/ammnt/angie:main
           docker tag ghcr.io/ammnt/angie:main ammnt/angie:main
+          DIGEST=$(docker images --no-trunc --quiet ghcr.io/ammnt/angie:main)
           docker push ammnt/angie:main
+          echo "DIGEST=$DIGEST" >> $GITHUB_ENV
+
+      - name: Attestation the Docker image📍
+        uses: actions/attest-build-provenance@v1.1.2
+        with:
+          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          subject-digest: ${{ env.DIGEST }}
+          push-to-registry: false
 
       - name: Sign the published Docker image🔐
         env:
           COSIGN_EXPERIMENTAL: "true"
         run: |
-          cosign sign ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
-          cosign sign docker.io/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
+          cosign sign ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ env.DIGEST }}
+          cosign sign docker.io/${{ env.IMAGE_NAME }}@${{ env.DIGEST }}
 
       - name: Run deploy update on the server✅
         uses: appleboy/ssh-action@v1.0.3
