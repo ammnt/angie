@@ -25,7 +25,7 @@ https://github.com/quictls/openssl
 - Added OCI labels and annotations;
 - No excess ENTRYPOINT in the image;
 - Slimmed version by Docker Slim tool;
-- Scanned by vulnerability scanners: GitHub, Docker Scout, Snyk and Syft;
+- Scanned by vulnerability scanners: GitHub, Docker Scout, Snyk, Anchore and Syft;
 - Prioritize ChaCha cipher patch and anonymous signature - removed "Server" header ("banner"):<br>
 https://github.com/ammnt/angie/blob/http3/Dockerfile
 
