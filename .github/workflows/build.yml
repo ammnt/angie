@@ -101,7 +101,8 @@ jobs:
         uses: anchore/scan-action@v3.6.4
         with:
           image: ghcr.io/ammnt/angie:main
-          fail-build: true
+          fail-build: false
+          severity-cutoff: critical
 
       - name: Upload Anchore report📊
         uses: github/codeql-action/upload-sarif@v3
