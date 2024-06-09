@@ -151,6 +151,14 @@ jobs:
           tag: ghcr.io/ammnt/angie:main
           overwrite: true
 
+      - name: Explore the Docker image🔍
+        timeout-minutes: 2
+        env:
+          CI: true
+        run: |
+          wget -q0- https://github.com/wagoodman/dive/releases/download/v0.12.0/dive_0.12.0_linux_amd64.tar.gz | sudo tar xvz -C /usr/local/bin
+          dive --ci-config "${{ github.workspace }}/.dive-ci/" ghcr.io/ammnt/angie:main
+
       - name: Test the Docker image🧪
         run: |
           docker run -d --rm -p 127.0.0.1:8080:8080/tcp ghcr.io/ammnt/angie:main
