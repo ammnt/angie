@@ -156,7 +156,8 @@ jobs:
         env:
           CI: true
         run: |
-          wget -q https://github.com/wagoodman/dive/releases/download/v0.12.0/dive_0.12.0_linux_amd64.tar.gz | sudo tar xvz -C /usr/local/bin
+          wget -q https://github.com/wagoodman/dive/releases/download/v0.12.0/dive_0.12.0_linux_amd64.tar.gz
+          tar xvzf dive_0.12.0_linux_amd64.tar.gz -C /usr/local/bin
           dive --ci-config "${{ github.workspace }}/.dive-ci/" ghcr.io/ammnt/angie:main
 
       - name: Test the Docker image🧪
