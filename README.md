@@ -32,7 +32,7 @@ https://github.com/quictls/openssl
 - Scanned effiniefficiency result with Dive tool;
 - Scanned by vulnerability scanners: GitHub, Docker Scout, Snyk, Anchore, Clair and Syft;
 - Prioritize ChaCha cipher patch and anonymous signature - removed "Server" header ("banner"):<br>
-https://github.com/ammnt/angie/blob/http3/Dockerfile
+https://github.com/ammnt/angie/blob/main/Dockerfile
 
 # Note:
 
