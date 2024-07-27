@@ -4,10 +4,8 @@ on:
   workflow_dispatch:
   # schedule:
   # - cron: "00 12 1 * *"
-  push:
-    branches: ["main"]
-  pull_request:
-    branches-ignore: ["main"]
+  # push:
+  #   branches: ["main"]
 
 env:
   REGISTRY: ghcr.io
