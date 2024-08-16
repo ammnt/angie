@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 docker.io/library/alpine:latest
+FROM docker.io/library/alpine:latest
 RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && apk -U upgrade && apk add --no-cache \
     openssl \
