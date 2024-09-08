@@ -1,5 +1,3 @@
-ARG OPENSSL_BRANCH="openssl-3.3"
-
 FROM docker.io/library/alpine:latest
 RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && apk -U upgrade && apk add --no-cache \
@@ -25,11 +23,10 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
     gnupg \
     cmake \
     go \
-    mercurial \
     libxslt \
     libxslt-dev \
     tini \
-&& cd /tmp && git clone --recursive --depth 1 https://github.com/webserver-llc/angie.git \
+&& cd /tmp && git clone https://github.com/webserver-llc/angie \
 && sed -i -e 's@"nginx/"@" "@g' /tmp/angie/src/core/nginx.h \
 && sed -i -e 's@"Angie/"@" "@g' /tmp/angie/src/core/angie.h \
 && sed -i -e 's@"Angie version: "@" "@g' /tmp/angie/src/core/nginx.c \
@@ -46,7 +43,7 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && sed -i -e '1i pid /tmp/angie.pid;\n' /tmp/angie/conf/angie.conf \
 && sed -i -e 's/SSL_OP_CIPHER_SERVER_PREFERENCE);/SSL_OP_CIPHER_SERVER_PREFERENCE | SSL_OP_PRIORITIZE_CHACHA);/g' /tmp/angie/src/event/ngx_event_openssl.c \
 && addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --uid 101 --no-create-home \
-&& git clone --recursive --depth 1 --single-branch -b $OPENSSL_BRANCH https://github.com/quictls/openssl && hg clone https://hg.nginx.org/njs \
+&& git clone --recursive --depth 1 --single-branch -b openssl-3.3 https://github.com/quictls/openssl && git clone https://hg.nginx.org/njs \
 && cd /tmp/njs && ./configure && make -j "${NB_CORES}" && make clean \
 && mkdir /var/cache/angie && cd /tmp/angie && ./configure \
     --with-debug \
@@ -102,7 +99,7 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && make -j "${NB_CORES}" && make install && make clean && strip /usr/sbin/angie* \
 && chown -R angie:angie /var/cache/angie && chmod -R g+w /var/cache/angie \
 && chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie \
-&& update-ca-certificates && apk --purge del libgcc libstdc++ g++ make build-base linux-headers automake autoconf git talloc talloc-dev libtool zlib-ng-dev binutils gnupg cmake mercurial go pcre-dev ca-certificates openssl libxslt-dev apk-tools \
+&& update-ca-certificates && apk --purge del libgcc libstdc++ g++ make build-base linux-headers automake autoconf git talloc talloc-dev libtool zlib-ng-dev binutils gnupg cmake go pcre-dev ca-certificates openssl libxslt-dev apk-tools \
 && rm -rf /tmp/* /var/cache/apk/ /var/cache/misc /root/.gnupg /root/.cache /root/go /etc/apk \
 && ln -sf /dev/stdout /tmp/access.log && ln -sf /dev/stderr /tmp/error.log
 
