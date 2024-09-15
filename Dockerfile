@@ -28,6 +28,8 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
     libxslt \
     libxslt-dev \
     tini \
+    musl-dev \
+    ncurses-libs \
 && cd /tmp && git clone https://github.com/webserver-llc/angie \
 && sed -i -e 's@"nginx/"@" "@g' /tmp/angie/src/core/nginx.h \
 && sed -i -e 's@"Angie/"@" "@g' /tmp/angie/src/core/angie.h \
@@ -101,7 +103,7 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && make -j "${NB_CORES}" && make install && make clean && strip /usr/sbin/angie* \
 && chown -R angie:angie /var/cache/angie && chmod -R g+w /var/cache/angie \
 && chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie \
-&& update-ca-certificates && apk --purge del libgcc libstdc++ g++ make build-base linux-headers automake autoconf git talloc talloc-dev libtool zlib-ng-dev binutils gnupg cmake go pcre-dev ca-certificates openssl libxslt-dev apk-tools \
+&& update-ca-certificates && apk --purge del libgcc libstdc++ g++ make build-base linux-headers automake autoconf git talloc talloc-dev libtool zlib-ng-dev binutils gnupg cmake go pcre-dev ca-certificates openssl libxslt-dev apk-tools musl-dev \
 && rm -rf /tmp/* /var/cache/apk/ /var/cache/misc /root/.gnupg /root/.cache /root/go /etc/apk \
 && ln -sf /dev/stdout /tmp/access.log && ln -sf /dev/stderr /tmp/error.log
 
