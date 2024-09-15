@@ -40,11 +40,6 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && sed -i -e 's@<hr><center>Angie</center>@@g' /tmp/angie/src/http/ngx_http_special_response.c \
 && sed -i -e 's@NGINX_VERSION      ".*"@NGINX_VERSION      " "@g' /tmp/angie/src/core/nginx.h \
 && sed -i -e 's@ANGIE_VERSION      ".*"@ANGIE_VERSION      " "@g' /tmp/angie/src/core/angie.h \
-&& sed -i -e 's/listen       80;/listen 8080;/g' /tmp/angie/conf/angie.conf \
-&& sed -i -e 's@#tcp_nopush     on;@client_body_temp_path /tmp/client_temp;@g' /tmp/angie/conf/angie.conf \
-&& sed -i -e 's@#keepalive_timeout  0;@proxy_temp_path /tmp/proxy_temp;@g' /tmp/angie/conf/angie.conf \
-&& sed -i -e 's@#gzip  on;@fastcgi_temp_path /tmp/fastcgi_temp;@g' /tmp/angie/conf/angie.conf \
-&& sed -i -e '1i pid /tmp/angie.pid;\n' /tmp/angie/conf/angie.conf \
 && sed -i -e 's/SSL_OP_CIPHER_SERVER_PREFERENCE);/SSL_OP_CIPHER_SERVER_PREFERENCE | SSL_OP_PRIORITIZE_CHACHA);/g' /tmp/angie/src/event/ngx_event_openssl.c \
 && addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --uid 101 --no-create-home \
 && git clone --recursive --depth 1 --single-branch -b ${OPENSSL_BRANCH} https://github.com/quictls/openssl && git clone --depth=1 --recursive --shallow-submodules https://github.com/nginx/njs \
@@ -107,6 +102,7 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && rm -rf /tmp/* /var/cache/apk/ /var/cache/misc /root/.gnupg /root/.cache /root/go /etc/apk \
 && ln -sf /dev/stdout /tmp/access.log && ln -sf /dev/stderr /tmp/error.log
 
+COPY ./angie.conf /etc/angie/angie.conf
 ENTRYPOINT [ "/sbin/tini", "--" ]
 
 EXPOSE 8080/tcp 8443/tcp 8443/udp
