@@ -1,6 +1,6 @@
 FROM docker.io/library/alpine:latest
 ENV OPENSSL_BRANCH openssl-3.3
-
+ENV APP_BRANCH Angie-1.6.2
 RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && apk -U upgrade && apk add --no-cache \
     openssl \
@@ -32,7 +32,7 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
     ncurses-libs \
     gd-dev \
     brotli-libs \
-&& cd /tmp && git clone https://github.com/webserver-llc/angie \
+&& cd /tmp && git clone -b "${APP_BRANCH}" https://github.com/webserver-llc/angie \
 && sed -i -e 's@"nginx/"@" "@g' /tmp/angie/src/core/nginx.h \
 && sed -i -e 's@"Angie/"@" "@g' /tmp/angie/src/core/angie.h \
 && sed -i -e 's@"Angie version: "@" "@g' /tmp/angie/src/core/nginx.c \
