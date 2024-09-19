@@ -1,6 +1,6 @@
 FROM docker.io/library/alpine:latest
 ENV OPENSSL_BRANCH=openssl-3.3
-ENV APP_BRANCH=Angie-1.6.2
+ENV APP_BRANCH=Angie-1.7.0
 RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && apk -U upgrade && apk add --no-cache \
     openssl \
