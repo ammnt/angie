@@ -5,9 +5,9 @@
 [![GitHub issues open](https://img.shields.io/github/issues/ammnt/angie.svg)](https://github.com/ammnt/angie/issues)
 
 The Docker image is ready to use:<br>
-<code>docker run -d --rm -p 127.0.0.1:8080:35400/tcp ghcr.io/ammnt/angie:main</code><br>
+<code>docker run -d --rm -p 127.0.0.1:8080:8080/tcp ghcr.io/ammnt/angie:main</code><br>
 or<br>
-<code>docker run -d --rm -p 127.0.0.1:8080:35400/tcp ammnt/angie:main</code>
+<code>docker run -d --rm -p 127.0.0.1:8080:8080/tcp ammnt/angie:main</code>
 
 # Description:
 
