@@ -60,8 +60,8 @@ jobs:
           context: .
           platforms: linux/amd64
           load: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ env.APP_VERSION }}
+          tags: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
+          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
