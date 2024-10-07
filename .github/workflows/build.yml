@@ -169,10 +169,8 @@ jobs:
           docker tag ${{ github.repository }}:${{ env.APP_VERSION }} ${{ github.repository }}:latest
           docker tag ${{ github.repository }}:${{ env.APP_VERSION }} ammnt/angie:${{ env.APP_VERSION }}
           docker tag ${{ github.repository }}:${{ env.APP_VERSION }} ammnt/angie:latest
-          docker push ${{ github.repository }}:${{ env.APP_VERSION }}
-          docker push ammnt/angie:${{ env.APP_VERSION }}
-          docker push ${{ github.repository }}:latest
-          docker push ammnt/angie:latest
+          docker push ${{ github.repository }} --all-tags
+          docker push ammnt/angie --all-tags
           DIGEST=$(docker images --no-trunc --quiet ${{ github.repository }}:${{ env.APP_VERSION }})
           echo "DIGEST=$DIGEST" >> $GITHUB_ENV
 
