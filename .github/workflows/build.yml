@@ -27,8 +27,8 @@ jobs:
       - name: Checkout repository🧱
         uses: actions/checkout@v4.2.2
 
-      - name: Install cosign🔒
-        uses: sigstore/cosign-installer@v3.7.0
+      # - name: Install cosign🔒
+      #   uses: sigstore/cosign-installer@v3.7.0
 
       - name: Setup Docker buildx🛠️
         uses: docker/setup-buildx-action@v3.7.1
@@ -112,7 +112,7 @@ jobs:
       - name: Analyze image with Syft💊
         uses: anchore/sbom-action@v0.17.6
         with:
-          syft-version: v1.15.0
+          syft-version: v1.17.0
           image: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
           artifact-name: image.spdx.json
           dependency-snapshot: false
@@ -181,12 +181,13 @@ jobs:
           subject-digest: ${{ env.DIGEST }}
           push-to-registry: false
 
-      - name: Sign the published Docker image🔐
-        env:
-          COSIGN_EXPERIMENTAL: "true"
-        run: |
-          cosign sign ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ env.DIGEST }}
-          cosign sign docker.io/${{ env.IMAGE_NAME }}@${{ env.DIGEST }}
+      # - name: Sign the published Docker image🔐
+      #   env:
+      #     COSIGN_EXPERIMENTAL: "true"
+      #   run: |
+      #     echo ${{ env.DIGEST }}
+      #     cosign sign ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ env.DIGEST }}
+      #     cosign sign ${{ env.IMAGE_NAME }}@${{ env.DIGEST }}
 
       - name: Run deploy update on the server✅
         uses: appleboy/ssh-action@v1.1.0
