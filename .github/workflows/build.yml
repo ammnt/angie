@@ -145,11 +145,11 @@ jobs:
         uses: kitabisa/docker-slim-action@v1.1.1
         env:
           DSLIM_HTTP_PROBE: false
-          version: 1.40.10
         with:
           target: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
           tag: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
           overwrite: true
+          version: 1.40.10
 
       - name: Explore the Docker image with Dive🔍
         timeout-minutes: 2
