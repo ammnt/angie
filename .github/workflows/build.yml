@@ -155,7 +155,7 @@ jobs:
         run: |
           curl -L -o ds.tar.gz https://github.com/slimtoolkit/slim/releases/download/1.40.11/dist_linux.tar.gz
           tar -xvf ds.tar.gz
-          ./dist_linuxslim --verbose --debug build --target ghcr.io/ammnt/angie:${{ env.APP_VERSION }} --tag ghcr.io/ammnt/angie:${{ env.APP_VERSION }} --http-probe=false --continue-after=5
+          ./dist_linux/slim --verbose --debug build --target ghcr.io/ammnt/angie:${{ env.APP_VERSION }} --tag ghcr.io/ammnt/angie:${{ env.APP_VERSION }} --http-probe=false --continue-after=5
 
       - name: Explore the Docker image with Dive🔍
         timeout-minutes: 2
