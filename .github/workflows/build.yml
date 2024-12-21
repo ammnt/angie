@@ -141,14 +141,21 @@ jobs:
           wget -qO clair-scanner https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64 && chmod +x clair-scanner
           ./clair-scanner --ip="$DOCKER_GATEWAY" ghcr.io/ammnt/angie:${{ env.APP_VERSION }} || exit 0
 
+      # - name: Slim the Docker image🚀
+      #   uses: kitabisa/docker-slim-action@v1.1.2
+      #   env:
+      #     DSLIM_HTTP_PROBE: false
+      #   with:
+      #     target: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
+      #     tag: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
+      #     overwrite: true
+      #     version: 1.40.11
+
       - name: Slim the Docker image🚀
-        uses: kitabisa/docker-slim-action@v1.1.2
-        env:
-          DSLIM_HTTP_PROBE: false
-        with:
-          target: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
-          tag: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
-          overwrite: true
+        run: |
+          curl -L -o ds.tar.gz https://github.com/slimtoolkit/slim/releases/download/1.40.11/dist_linux.tar.gz
+          tar -xvf ds.tar.gz
+          ./dist_linuxslim --verbose --debug build --target ghcr.io/ammnt/angie:${{ env.APP_VERSION }} --tag ghcr.io/ammnt/angie:${{ env.APP_VERSION }} --http-probe=false --continue-after=5
 
       - name: Explore the Docker image with Dive🔍
         timeout-minutes: 2
