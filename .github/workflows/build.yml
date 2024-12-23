@@ -53,6 +53,13 @@ jobs:
         uses: docker/metadata-action@v5.6.1
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          labels: |
+            description="Distroless Angie built with QUIC and HTTP/3 support🚀"
+            maintainer="ammnt <admin@msftcnsi.com>"
+            org.opencontainers.image.description="Distroless Angie built with QUIC and HTTP/3 support🚀"
+            org.opencontainers.image.authors="ammnt, admin@msftcnsi.com"
+            org.opencontainers.image.title="Distroless Angie built with QUIC and HTTP/3 support🚀"
+            org.opencontainers.image.source="https://github.com/ammnt/angie/"
 
       - name: Build the Docker image⛓️
         id: build
@@ -157,7 +164,15 @@ jobs:
         run: |
           curl -L -o ds.tar.gz https://github.com/slimtoolkit/slim/releases/download/1.40.11/dist_linux.tar.gz
           tar -xvf ds.tar.gz
-          ./dist_linux/slim --verbose --debug build --target ghcr.io/ammnt/angie:${{ env.APP_VERSION }} --tag ghcr.io/ammnt/angie:${{ env.APP_VERSION }} --http-probe=false --continue-after=5
+          ./dist_linux/slim --verbose --debug build --target ghcr.io/ammnt/angie:${{ env.APP_VERSION }} \
+          --tag ghcr.io/ammnt/angie:${{ env.APP_VERSION }} --http-probe=false \
+          --label description="Distroless Angie built with QUIC and HTTP/3 support🚀" \
+          --label maintainer="ammnt <admin@msftcnsi.com>" \
+          --label org.opencontainers.image.description="Distroless Angie built with QUIC and HTTP/3 support🚀" \
+          --label org.opencontainers.image.authors="ammnt, admin@msftcnsi.com" \
+          --label org.opencontainers.image.title="Distroless Angie built with QUIC and HTTP/3 support🚀" \
+          --label org.opencontainers.image.source="https://github.com/ammnt/angie/" \
+          --continue-after=5
 
       - name: Explore the Docker image with Dive🔍
         timeout-minutes: 2
