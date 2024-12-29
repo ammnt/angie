@@ -160,7 +160,7 @@ jobs:
       #     version: 1.40.11
 
       # Dump the report📊
-      # - run: echo "${REPORT}"
+      #   run: echo "${REPORT}"
       #   env:
       #     REPORT: ${{ steps.slim.outputs.report }}
 
