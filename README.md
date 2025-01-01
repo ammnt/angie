@@ -29,7 +29,6 @@ services:
       - apparmor:docker-angie
     volumes:
       - "./conf:/etc/angie:ro"
-      - "./conf/ssl:/etc/angie/ssl:ro"
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
 ...
