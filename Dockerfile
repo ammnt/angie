@@ -4,6 +4,7 @@ FROM docker.io/library/alpine:${BASE_VERSION}@sha256:${BASE_HASH}
 ARG OPENSSL_BRANCH=openssl-3.3
 ARG APP_BRANCH=Angie-1.8.1
 RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
+&& addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --uid 101 --no-create-home \
 && apk -U upgrade && apk add --no-cache \
     openssl \
     pcre \
@@ -45,7 +46,6 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && sed -i -e 's@NGINX_VERSION      ".*"@NGINX_VERSION      " "@g' /tmp/angie/src/core/nginx.h \
 && sed -i -e 's@ANGIE_VERSION      ".*"@ANGIE_VERSION      " "@g' /tmp/angie/src/core/angie.h \
 && sed -i -e 's/SSL_OP_CIPHER_SERVER_PREFERENCE);/SSL_OP_CIPHER_SERVER_PREFERENCE | SSL_OP_PRIORITIZE_CHACHA);/g' /tmp/angie/src/event/ngx_event_openssl.c \
-&& addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --uid 101 --no-create-home \
 && git clone --recursive --depth 1 --single-branch -b ${OPENSSL_BRANCH} https://github.com/quictls/openssl \
 && git clone --depth=1 --recursive --shallow-submodules https://github.com/google/ngx_brotli && git clone --depth=1 --recursive --shallow-submodules https://github.com/nginx/njs \
 && cd /tmp/njs && ./configure && make -j "${NB_CORES}" && make clean \
