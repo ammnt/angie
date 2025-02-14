@@ -2,7 +2,7 @@ ARG BASE_VERSION=3.21.0
 ARG BASE_HASH=21dc6063fd678b478f57c0e13f47560d0ea4eeba26dfc947b2a4f81f686b9f45
 FROM docker.io/library/alpine:${BASE_VERSION}@sha256:${BASE_HASH}
 ARG OPENSSL_BRANCH=openssl-3.3
-ARG APP_BRANCH=Angie-1.8.1
+ARG APP_BRANCH=Angie-1.8.2
 RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --uid 101 --no-create-home \
 && apk -U upgrade && apk add --no-cache \

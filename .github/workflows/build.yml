@@ -10,7 +10,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  APP_VERSION: 1.8.1
+  APP_VERSION: 1.8.2
 
 jobs:
   build:
