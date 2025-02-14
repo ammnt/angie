@@ -166,8 +166,8 @@ jobs:
         uses: actions/upload-artifact@v4.6.0
         if: always()
         with:
-          name: Report
-          path: result.json
+          name: dockle.report.json
+          path: dockle.report.json
 
       - name: Slim the Docker image🚀
         uses: kitabisa/docker-slim-action@v1.2.0
@@ -188,6 +188,7 @@ jobs:
         uses: actions/upload-artifact@v4.6.0
         with:
           name: slim.report.json
+          path: slim.report.json
 
       - name: Explore the Docker image with Dive🔍
         timeout-minutes: 2
