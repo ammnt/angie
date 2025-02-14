@@ -205,14 +205,20 @@ jobs:
           docker run -d --rm -p 127.0.0.1:8080:8080/tcp ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
           curl -v http://127.0.0.1:8080 || exit 1
 
-      - name: Analyze image with Syft📊
+      - name: Analyze image with Syft💊
         uses: anchore/sbom-action@v0.18.0
         with:
           syft-version: v1.19.0
           image: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
           format: spdx-json
-          artifact-name: Syft Report (SBOM)
           output-file: syft.report.json
+          upload-artifact: false
+
+      - name: Upload the Syft report (SBOM)📊
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: Syft Report (SBOM)
+          path: syft.report.json
 
       # - name: Push the Docker images to registries💾
       #   run: |
