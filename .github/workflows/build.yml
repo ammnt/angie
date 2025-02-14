@@ -188,7 +188,6 @@ jobs:
         uses: actions/upload-artifact@v4.6.0
         with:
           name: slim.report.json
-          path: ${{ steps.slim.outputs.report }}
 
       - name: Explore the Docker image with Dive🔍
         timeout-minutes: 2
