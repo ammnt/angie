@@ -82,13 +82,14 @@ jobs:
         with:
           command: cves,sbom
           image: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
-          sarif-file: sarif.output.json
+          sarif-file: scout.report.json
           summary: false
 
       - name: Upload Docker Scout report📊
-        uses: github/codeql-action/upload-sarif@v3
+        uses: actions/upload-artifact@v4.6.0
         with:
-          sarif_file: sarif.output.json
+          name: scout.report.json
+          path: "${{ github.workspace }}/scout.report.json"
 
       - name: Analyze image with Trivy💊
         uses: aquasecurity/trivy-action@0.29.0
@@ -96,7 +97,7 @@ jobs:
           image-ref: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
           scan-type: image
           format: "github"
-          output: "dependency-results.sbom.json"
+          output: "trivy.report.json"
           severity: "MEDIUM,HIGH,CRITICAL"
           scanners: "vuln"
           github-pat: ${{ secrets.GH_TOKEN }}
@@ -105,7 +106,7 @@ jobs:
         uses: actions/upload-artifact@v4.6.0
         with:
           name: trivy.report.json
-          path: "${{ github.workspace }}/dependency-results.sbom.json"
+          path: "${{ github.workspace }}/trivy.report.json"
 
       - name: Analyze image with Grype💊
         id: anchore
@@ -120,7 +121,7 @@ jobs:
       - name: Upload Grype report📊
         uses: actions/upload-artifact@v4.6.0
         with:
-          name: snyk.report.json
+          name: grype.report.json
           path: "${{ github.workspace }}/grype.report.json"
 
       - name: Analyze image with Syft💊
@@ -161,7 +162,7 @@ jobs:
         with:
           image: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
           format: "json"
-          output: "result.json"
+          output: "dockle.report.json"
           exit-code: "1"
           exit-level: "warn"
           ignore: "CIS-DI-0010"
@@ -171,7 +172,7 @@ jobs:
         if: always()
         with:
           name: dockle.report.json
-          path: "${{ github.workspace }}/result.json"
+          path: "${{ github.workspace }}/dockle.report.json"
 
       - name: Slim the Docker image🚀
         uses: kitabisa/docker-slim-action@v1.2.0
