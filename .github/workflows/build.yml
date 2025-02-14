@@ -211,7 +211,7 @@ jobs:
           syft-version: v1.19.0
           image: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
           format: spdx-json
-          artifact-name: Syft Report (SBOM)+
+          artifact-name: Syft Report (SBOM)
           output-file: syft.report.json
 
       # - name: Push the Docker images to registries💾
