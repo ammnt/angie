@@ -141,6 +141,12 @@ jobs:
           image: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
           args: --file=Dockerfile
 
+      - name: Test💊
+        run: |
+          pwd
+          ls -lash
+          cat snyk.sarif
+
       - name: Upload Snyk report📊
         uses: actions/upload-artifact@v4.6.0
         with:
