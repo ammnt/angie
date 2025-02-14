@@ -104,7 +104,7 @@ jobs:
       - name: Upload Trivy report📊
         uses: actions/upload-artifact@v4.6.0
         with:
-          name: trivy-sbom-report
+          name: trivy.report.json
           path: "${{ github.workspace }}/dependency-results.sbom.json"
 
       - name: Analyze image with Grype💊
@@ -125,7 +125,7 @@ jobs:
         with:
           syft-version: v1.19.0
           image: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
-          artifact-name: image.spdx.json
+          artifact-name: syft.report.json
           dependency-snapshot: false
 
       - name: Analyze image with Snyk💊
@@ -166,8 +166,8 @@ jobs:
         uses: actions/upload-artifact@v4.6.0
         if: always()
         with:
-          name: Report
-          path: result.json
+          name: dockle.report.json
+          path: "${{ github.workspace }}/result.json"
 
       - name: Slim the Docker image🚀
         uses: kitabisa/docker-slim-action@v1.2.0
