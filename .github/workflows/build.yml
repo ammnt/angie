@@ -114,11 +114,14 @@ jobs:
           image: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
           fail-build: false
           severity-cutoff: critical
+          grype-version: v0.87.0
+          output-file: "${{ github.workspace }}/grype.report.json"
 
       - name: Upload Grype report📊
-        uses: github/codeql-action/upload-sarif@v3
+        uses: actions/upload-artifact@v4.6.0
         with:
-          sarif_file: ${{ steps.anchore.outputs.sarif }}
+          name: snyk.report.json
+          path: "${{ github.workspace }}/grype.report.json"
 
       - name: Analyze image with Syft💊
         uses: anchore/sbom-action@v0.18.0
@@ -138,9 +141,10 @@ jobs:
           args: --file=Dockerfile
 
       - name: Upload Snyk report📊
-        uses: github/codeql-action/upload-sarif@v3
+        uses: actions/upload-artifact@v4.6.0
         with:
-          sarif_file: snyk.sarif
+          name: snyk.report.json
+          path: "${{ github.workspace }}/snyk.sarif"
 
       - name: Analyze image with Clair💊
         run: |
@@ -183,11 +187,6 @@ jobs:
         run: echo "${REPORT}"
         env:
           REPORT: ${{ steps.slim.outputs.report }}
-
-      - name: Test🔍
-        run: |
-          ls -lash
-          ls -la ${{ github.workspace }}/
 
       - name: Upload the Slim report📊
         uses: actions/upload-artifact@v4.6.0
