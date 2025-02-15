@@ -1,6 +1,6 @@
 ARG BASE_VERSION=3.21.2
 ARG BASE_HASH=56fa17d2a7e7f168a043a2712e63aed1f8543aeafdcee47c58dcffe38ed51099
-FROM docker.io/library/alpine:${BASE_VERSION}@sha256:${BASE_HASH}
+FROM docker.io/library/alpine:${BASE_VERSION}@sha256:${BASE_HASH} AS builder
 ARG OPENSSL_BRANCH=openssl-3.3
 ARG APP_BRANCH=Angie-1.8.2
 RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
@@ -104,9 +104,22 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && chown -R angie:angie /var/cache/angie && chmod -R g+w /var/cache/angie \
 && chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie \
 && update-ca-certificates && apk --purge del libgcc g++ make build-base linux-headers automake autoconf git talloc talloc-dev libtool zlib-ng-dev binutils gnupg cmake go pcre-dev ca-certificates openssl libxslt-dev apk-tools musl-dev gd-dev \
-&& rm -rf /tmp/* /var/cache/apk/ /var/cache/misc /root/.gnupg /root/.cache /root/go /etc/apk \
-&& ln -sf /dev/stdout /tmp/access.log && ln -sf /dev/stderr /tmp/error.log
+&& rm -rf /tmp/* /var/cache/apk/ /var/cache/misc /root/.gnupg /root/.cache /root/go /etc/apk
 
+FROM docker.io/library/alpine:${BASE_VERSION}@sha256:${BASE_HASH}
+RUN addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --uid 101 --no-create-home \
+&& apk -U upgrade && apk add --no-cache \
+    openssl \
+    pcre \
+    zlib-ng \
+    libstdc++ \
+    tini \
+    brotli-libs \
+    libxslt
+
+COPY --from=builder /usr/sbin/angie /usr/sbin/angie
+COPY --from=builder /etc/angie /etc/angie
+COPY --from=builder /var/cache/angie /var/cache/angie
 COPY ./angie.conf /etc/angie/angie.conf
 COPY ./default.conf /etc/angie/conf.d/default.conf
 
