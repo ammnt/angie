@@ -115,7 +115,10 @@ RUN addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --uid 101 --
     libstdc++ \
     tini \
     brotli-libs \
-    libxslt
+    libxslt \
+    ca-certificates \
+&& update-ca-certificates && apk --purge del ca-certificates apk-tools \
+&& rm -rf /tmp/* /var/cache/apk/ /var/cache/misc /root/.gnupg /root/.cache /root/go /etc/apk
 
 COPY --from=builder /usr/sbin/angie /usr/sbin/angie
 COPY --from=builder /etc/angie /etc/angie
