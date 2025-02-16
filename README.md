@@ -45,7 +45,6 @@ https://github.com/quictls/openssl
 - Built using hardening GCC flags;
 - NJS and Brotli support;
 - PCRE with JIT compilation;
-- zlib-ng library latest version;
 - Rootless master process - unprivileged container;
 - Async I/O threads module;
 - "Distroless" image - shell removed from the image;
