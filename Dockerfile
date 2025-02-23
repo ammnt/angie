@@ -54,7 +54,6 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && git clone --recursive --depth 1 --shallow-submodules --single-branch -b ${NJS_VERSION} https://github.com/nginx/njs \
 && cd /tmp/njs && ./configure && make -j "${NB_CORES}" && make clean \
 && mkdir /var/cache/angie && cd /tmp/angie && ./configure \
-    --with-debug \
     --prefix=/etc/angie \
     --sbin-path=/usr/sbin/angie \
     --user=angie \
@@ -132,7 +131,7 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
     --without-mail_smtp_module \
     --add-module=/tmp/njs/nginx \
     --add-module=/tmp/ngx_brotli \
-&& make -j "${NB_CORES}" && make install && make clean && strip /usr/sbin/angie* \
+&& make -j "${NB_CORES}" && make install && make clean && strip /usr/sbin/angie \
 && chown -R angie:angie /var/cache/angie && chmod -R g+w /var/cache/angie \
 && chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie
 
