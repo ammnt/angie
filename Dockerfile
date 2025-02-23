@@ -36,8 +36,8 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
     gd-dev \
     brotli-libs \
     ca-certificates \
-&& update-ca-certificates \
-&& cd /tmp && git clone -b "${APP_VERSION}" https://github.com/webserver-llc/angie && rm -rf /tmp/angie/html/* \
+&& update-ca-certificates && cd /tmp \
+&& git clone --depth 1 --recursive --single-branch -b "${APP_VERSION}" https://github.com/webserver-llc/angie && rm -rf /tmp/angie/html/* \
 && sed -i -e 's@"nginx/"@" "@g' /tmp/angie/src/core/nginx.h \
 && sed -i -e 's@"Angie/"@" "@g' /tmp/angie/src/core/angie.h \
 && sed -i -e 's@"Angie version: "@" "@g' /tmp/angie/src/core/nginx.c \
@@ -50,8 +50,8 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && sed -i -e 's@ANGIE_VERSION      ".*"@ANGIE_VERSION      " "@g' /tmp/angie/src/core/angie.h \
 && sed -i -e 's/SSL_OP_CIPHER_SERVER_PREFERENCE);/SSL_OP_CIPHER_SERVER_PREFERENCE | SSL_OP_PRIORITIZE_CHACHA);/g' /tmp/angie/src/event/ngx_event_openssl.c \
 && git clone --recursive --depth 1 --single-branch -b ${OPENSSL_VERSION} https://github.com/openssl/openssl \
-&& git clone --depth=1 --recursive --shallow-submodules https://github.com/google/ngx_brotli \
-&& git clone --depth=1 --recursive --shallow-submodules --single-branch -b ${NJS_VERSION} https://github.com/nginx/njs \
+&& git clone --recursive --depth 1 --shallow-submodules https://github.com/google/ngx_brotli \
+&& git clone --recursive --depth 1 --shallow-submodules --single-branch -b ${NJS_VERSION} https://github.com/nginx/njs \
 && cd /tmp/njs && ./configure && make -j "${NB_CORES}" && make clean \
 && mkdir /var/cache/angie && cd /tmp/angie && ./configure \
     --with-debug \
