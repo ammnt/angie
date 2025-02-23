@@ -1,0 +1,341 @@
+{
+  "version": "1.1",
+  "engine": "linux/amd64|Transformer|1.40.11|1b271555882eacdfb4e6598d6d0552e9b9b1449b|2024-02-02_01:36:22PM",
+  "containerized": false,
+  "host_distro": {
+    "name": "Debian GNU/Linux",
+    "version": "12",
+    "display_name": "Debian GNU/Linux 12 (bookworm)"
+  },
+  "type": "build",
+  "state": "done",
+  "target_reference": "ammnt/angie:test",
+  "system": {
+    "type": "Linux",
+    "release": "5.15.167.4-microsoft-standard-WSL2",
+    "distro": {
+      "name": "Alpine Linux",
+      "version": "3.21.3",
+      "display_name": "Alpine Linux v3.21"
+    }
+  },
+  "source_image": {
+    "identity": {
+      "id": "sha256:e5276cf8f50e283022a69e8ab36e252a06b123a011acaf5b8b736267f2d5e0a0",
+      "tags": [
+        "test"
+      ],
+      "names": [
+        "ammnt/angie:test"
+      ],
+      "digests": [
+        "sha256:e5276cf8f50e283022a69e8ab36e252a06b123a011acaf5b8b736267f2d5e0a0"
+      ],
+      "full_digests": [
+        "ammnt/angie@sha256:e5276cf8f50e283022a69e8ab36e252a06b123a011acaf5b8b736267f2d5e0a0"
+      ]
+    },
+    "size": 10254872,
+    "size_human": "10 MB",
+    "create_time": "2025-02-23T14:59:00Z",
+    "docker_version": "27.5.1",
+    "architecture": "amd64",
+    "user": "angie",
+    "exposed_ports": [
+      "8080/tcp",
+      "8443/tcp",
+      "8443/udp"
+    ],
+    "os": "linux",
+    "labels": {
+      "description": "Distroless Angie built with QUIC and HTTP/3 support🚀",
+      "maintainer": "ammnt <admin@msftcnsi.com>",
+      "org.opencontainers.image.authors": "ammnt, admin@msftcnsi.com",
+      "org.opencontainers.image.description": "Distroless Angie built with QUIC and HTTP/3 support🚀",
+      "org.opencontainers.image.source": "https://github.com/ammnt/angie/",
+      "org.opencontainers.image.title": "Distroless Angie built with QUIC and HTTP/3 support🚀"
+    },
+    "env_vars": [
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    ],
+    "container_entry": {
+      "exe_path": ""
+    }
+  },
+  "minified_image_size": 5911885,
+  "minified_image_size_human": "5.9 MB",
+  "minified_image": "ammnt/angie:slim",
+  "minified_image_id": "sha256:7009663bc8616639da6a3238899357b0460746a8374db3b506b8c4e5d5d69a12",
+  "minified_image_digest": "sha256:94b4dbdec1f0adcea845d2d22da6f78c38d7ef553a9a7e166461606a8db03505",
+  "minified_image_has_data": true,
+  "minified_by": 1.7346196686843536,
+  "artifact_location": "/tmp/slim-state/.slim-state/images/e5276cf8f50e283022a69e8ab36e252a06b123a011acaf5b8b736267f2d5e0a0/artifacts",
+  "container_report_name": "creport.json",
+  "seccomp_profile_name": "ammnt-angie-seccomp.json",
+  "apparmor_profile_name": "ammnt-angie-apparmor-profile",
+  "image_stack": [
+    {
+      "is_top_image": true,
+      "id": "sha256:e5276cf8f50e283022a69e8ab36e252a06b123a011acaf5b8b736267f2d5e0a0",
+      "full_name": "ammnt/angie:test",
+      "repo_name": "ammnt/angie",
+      "version_tag": "test",
+      "raw_tags": [
+        "ammnt/angie:test"
+      ],
+      "create_time": "2025-02-23T14:59:00Z",
+      "new_size": 24064000,
+      "new_size_human": "24 MB",
+      "instructions": [
+        {
+          "type": "ADD",
+          "time": "2025-01-08T12:07:30Z",
+          "is_nop": false,
+          "local_image_exists": false,
+          "layer_index": 0,
+          "size": 8503296,
+          "size_human": "8.5 MB",
+          "params": "alpine-minirootfs-3.21.2-x86_64.tar.gz /",
+          "command_snippet": "ADD alpine-minirootfs-3.21.2-x86_64.tar.gz /",
+          "command_all": "ADD alpine-minirootfs-3.21.2-x86_64.tar.gz /",
+          "comment": "buildkit.dockerfile.v0",
+          "is_buildkit_instruction": true,
+          "inst_set_time_bucket": "2025-01-08T15:00:00+03:00",
+          "inst_set_time_index": 0,
+          "inst_set_time_reverse_index": 1
+        },
+        {
+          "type": "CMD",
+          "time": "2025-01-08T12:07:30Z",
+          "is_nop": false,
+          "is_exec_form": true,
+          "local_image_exists": false,
+          "layer_index": 0,
+          "size": 0,
+          "params": "[\"/bin/sh\"]\n",
+          "command_snippet": "CMD [\"/bin/sh\"]\n",
+          "command_all": "CMD [\"/bin/sh\"]\n",
+          "comment": "buildkit.dockerfile.v0",
+          "is_buildkit_instruction": true,
+          "inst_set_time_bucket": "2025-01-08T15:00:00+03:00",
+          "inst_set_time_index": 0,
+          "inst_set_time_reverse_index": 1
+        },
+        {
+          "type": "RUN",
+          "time": "2025-02-23T14:56:50Z",
+          "is_nop": false,
+          "local_image_exists": false,
+          "layer_index": 0,
+          "size": 6148096,
+          "size_human": "6.1 MB",
+          "command_snippet": "RUN set -ex && \\\n\taddgroup -S angie && \\\n\tad...",
+          "command_all": "RUN set -ex && \\\n\taddgroup -S angie && \\\n\tadduser -S angie -s /sbin/nologin -G angie --uid 101 --no-create-home && \\\n\tapk -U upgrade && \\\n\tapk add --no-cache     pcre     tini     brotli-libs     libxslt && \\\n\tapk del --purge apk-tools && \\\n\trm -rf /tmp/* /var/cache/apk/ /var/cache/misc /root/.gnupg /root/.cache /root/go /etc/apk",
+          "system_commands": [
+            "set -ex",
+            "addgroup -S angie",
+            "adduser -S angie -s /sbin/nologin -G angie --uid 101 --no-create-home",
+            "apk -U upgrade",
+            "apk add --no-cache     pcre     tini     brotli-libs     libxslt",
+            "apk del --purge apk-tools",
+            "rm -rf /tmp/* /var/cache/apk/ /var/cache/misc /root/.gnupg /root/.cache /root/go /etc/apk"
+          ],
+          "comment": "buildkit.dockerfile.v0",
+          "is_buildkit_instruction": true,
+          "inst_set_time_bucket": "2025-02-23T17:45:00+03:00",
+          "inst_set_time_index": 1,
+          "inst_set_time_reverse_index": 0
+        },
+        {
+          "type": "COPY",
+          "time": "2025-02-23T14:59:00Z",
+          "is_nop": false,
+          "local_image_exists": false,
+          "layer_index": 0,
+          "size": 9240576,
+          "size_human": "9.2 MB",
+          "params": "--chown=angie:angie /usr/sbin/angie /usr/sbin/angie",
+          "command_snippet": "COPY --chown=angie:angie /usr/sbin/angie /us...",
+          "command_all": "COPY --chown=angie:angie /usr/sbin/angie /usr/sbin/angie",
+          "comment": "buildkit.dockerfile.v0",
+          "is_buildkit_instruction": true,
+          "inst_set_time_bucket": "2025-02-23T17:45:00+03:00",
+          "inst_set_time_index": 1,
+          "inst_set_time_reverse_index": 0
+        },
+        {
+          "type": "COPY",
+          "time": "2025-02-23T14:59:00Z",
+          "is_nop": false,
+          "local_image_exists": false,
+          "layer_index": 0,
+          "size": 118784,
+          "size_human": "119 kB",
+          "params": "--chown=angie:angie /etc/angie /etc/angie",
+          "command_snippet": "COPY --chown=angie:angie /etc/angie /etc/ang...",
+          "command_all": "COPY --chown=angie:angie /etc/angie /etc/angie",
+          "comment": "buildkit.dockerfile.v0",
+          "is_buildkit_instruction": true,
+          "inst_set_time_bucket": "2025-02-23T17:45:00+03:00",
+          "inst_set_time_index": 1,
+          "inst_set_time_reverse_index": 0
+        },
+        {
+          "type": "COPY",
+          "time": "2025-02-23T14:59:00Z",
+          "is_nop": false,
+          "local_image_exists": false,
+          "layer_index": 0,
+          "size": 16384,
+          "size_human": "16 kB",
+          "params": "--chown=angie:angie /var/cache/angie /var/cache/angie",
+          "command_snippet": "COPY --chown=angie:angie /var/cache/angie /v...",
+          "command_all": "COPY --chown=angie:angie /var/cache/angie /var/cache/angie",
+          "comment": "buildkit.dockerfile.v0",
+          "is_buildkit_instruction": true,
+          "inst_set_time_bucket": "2025-02-23T17:45:00+03:00",
+          "inst_set_time_index": 1,
+          "inst_set_time_reverse_index": 0
+        },
+        {
+          "type": "COPY",
+          "time": "2025-02-23T14:59:00Z",
+          "is_nop": false,
+          "local_image_exists": false,
+          "layer_index": 0,
+          "size": 16384,
+          "size_human": "16 kB",
+          "params": "--chown=angie:angie ./angie.conf /etc/angie/angie.conf",
+          "command_snippet": "COPY --chown=angie:angie ./angie.conf /etc/a...",
+          "command_all": "COPY --chown=angie:angie ./angie.conf /etc/angie/angie.conf",
+          "comment": "buildkit.dockerfile.v0",
+          "is_buildkit_instruction": true,
+          "inst_set_time_bucket": "2025-02-23T17:45:00+03:00",
+          "inst_set_time_index": 1,
+          "inst_set_time_reverse_index": 0
+        },
+        {
+          "type": "COPY",
+          "time": "2025-02-23T14:59:00Z",
+          "is_nop": false,
+          "local_image_exists": false,
+          "layer_index": 0,
+          "size": 20480,
+          "size_human": "20 kB",
+          "params": "--chown=angie:angie ./default.conf /etc/angie/conf.d/default.conf",
+          "command_snippet": "COPY --chown=angie:angie ./default.conf /etc...",
+          "command_all": "COPY --chown=angie:angie ./default.conf /etc/angie/conf.d/default.conf",
+          "comment": "buildkit.dockerfile.v0",
+          "is_buildkit_instruction": true,
+          "inst_set_time_bucket": "2025-02-23T17:45:00+03:00",
+          "inst_set_time_index": 1,
+          "inst_set_time_reverse_index": 0
+        },
+        {
+          "type": "ENTRYPOINT",
+          "time": "2025-02-23T14:59:00Z",
+          "is_nop": false,
+          "is_exec_form": true,
+          "local_image_exists": false,
+          "layer_index": 0,
+          "size": 0,
+          "params": "[\"/sbin/tini\",\"--\"]\n",
+          "command_snippet": "ENTRYPOINT [\"/sbin/tini\",\"--\"]\n",
+          "command_all": "ENTRYPOINT [\"/sbin/tini\",\"--\"]\n",
+          "comment": "buildkit.dockerfile.v0",
+          "is_buildkit_instruction": true,
+          "inst_set_time_bucket": "2025-02-23T17:45:00+03:00",
+          "inst_set_time_index": 1,
+          "inst_set_time_reverse_index": 0
+        },
+        {
+          "type": "EXPOSE",
+          "time": "2025-02-23T14:59:00Z",
+          "is_nop": false,
+          "local_image_exists": false,
+          "layer_index": 0,
+          "size": 0,
+          "params": "8080/tcp:{} 8443/tcp:{} 8443/udp",
+          "command_snippet": "EXPOSE 8080/tcp:{} 8443/tcp:{} 8443/udp",
+          "command_all": "EXPOSE 8080/tcp:{} 8443/tcp:{} 8443/udp",
+          "comment": "buildkit.dockerfile.v0",
+          "is_buildkit_instruction": true,
+          "inst_set_time_bucket": "2025-02-23T17:45:00+03:00",
+          "inst_set_time_index": 1,
+          "inst_set_time_reverse_index": 0
+        },
+        {
+          "type": "LABEL",
+          "time": "2025-02-23T14:59:00Z",
+          "is_nop": false,
+          "local_image_exists": false,
+          "layer_index": 0,
+          "size": 0,
+          "params": "description=Distroless Angie built with QUIC and HTTP/3 support🚀 maintainer=ammnt <admin@msftcnsi.com> org.opencontainers.image.description=Distroless Angie built with QUIC and HTTP/3 support🚀 org.opencontainers.image.authors=ammnt, admin@msftcnsi.com org.opencontainers.image.title=Distroless Angie built with QUIC and HTTP/3 support🚀 org.opencontainers.image.source=https://github.com/ammnt/angie/",
+          "command_snippet": "LABEL description=Distroless Angie built wit...",
+          "command_all": "LABEL description=Distroless Angie built with QUIC and HTTP/3 support🚀 maintainer=ammnt <admin@msftcnsi.com> org.opencontainers.image.description=Distroless Angie built with QUIC and HTTP/3 support🚀 org.opencontainers.image.authors=ammnt, admin@msftcnsi.com org.opencontainers.image.title=Distroless Angie built with QUIC and HTTP/3 support🚀 org.opencontainers.image.source=https://github.com/ammnt/angie/",
+          "comment": "buildkit.dockerfile.v0",
+          "is_buildkit_instruction": true,
+          "inst_set_time_bucket": "2025-02-23T17:45:00+03:00",
+          "inst_set_time_index": 1,
+          "inst_set_time_reverse_index": 0
+        },
+        {
+          "type": "STOPSIGNAL",
+          "time": "2025-02-23T14:59:00Z",
+          "is_nop": false,
+          "local_image_exists": false,
+          "layer_index": 0,
+          "size": 0,
+          "params": "SIGQUIT",
+          "command_snippet": "STOPSIGNAL SIGQUIT",
+          "command_all": "STOPSIGNAL SIGQUIT",
+          "comment": "buildkit.dockerfile.v0",
+          "is_buildkit_instruction": true,
+          "inst_set_time_bucket": "2025-02-23T17:45:00+03:00",
+          "inst_set_time_index": 1,
+          "inst_set_time_reverse_index": 0
+        },
+        {
+          "type": "USER",
+          "time": "2025-02-23T14:59:00Z",
+          "is_nop": false,
+          "local_image_exists": false,
+          "layer_index": 0,
+          "size": 0,
+          "params": "angie",
+          "command_snippet": "USER angie",
+          "command_all": "USER angie",
+          "comment": "buildkit.dockerfile.v0",
+          "is_buildkit_instruction": true,
+          "inst_set_time_bucket": "2025-02-23T17:45:00+03:00",
+          "inst_set_time_index": 1,
+          "inst_set_time_reverse_index": 0
+        },
+        {
+          "type": "CMD",
+          "time": "2025-02-23T14:59:00Z",
+          "is_last_instruction": true,
+          "is_nop": false,
+          "is_exec_form": true,
+          "local_image_exists": true,
+          "layer_index": 0,
+          "size": 0,
+          "params": "[\"/usr/sbin/angie\",\"-g\",\"daemon off;\"]\n",
+          "command_snippet": "CMD [\"/usr/sbin/angie\",\"-g\",\"daemon off;\"]\n",
+          "command_all": "CMD [\"/usr/sbin/angie\",\"-g\",\"daemon off;\"]\n",
+          "comment": "buildkit.dockerfile.v0",
+          "raw_tags": [
+            "ammnt/angie:test"
+          ],
+          "is_buildkit_instruction": true,
+          "inst_set_time_bucket": "2025-02-23T17:45:00+03:00",
+          "inst_set_time_index": 1,
+          "inst_set_time_reverse_index": 0
+        }
+      ]
+    }
+  ],
+  "image_created": true,
+  "image_build_engine": "internal"
+}
