@@ -35,6 +35,8 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
     ncurses-libs \
     gd-dev \
     brotli-libs \
+    ca-certificates \
+&& update-ca-certificates \
 && cd /tmp && git clone -b "${APP_VERSION}" https://github.com/webserver-llc/angie && rm -rf /tmp/angie/html/* \
 && sed -i -e 's@"nginx/"@" "@g' /tmp/angie/src/core/nginx.h \
 && sed -i -e 's@"Angie/"@" "@g' /tmp/angie/src/core/angie.h \
@@ -145,8 +147,7 @@ RUN addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --uid 101 --
     tini \
     brotli-libs \
     libxslt \
-    ca-certificates \
-&& update-ca-certificates && apk del --purge ca-certificates apk-tools \
+&& apk del --purge ca-certificates apk-tools \
 && rm -rf /tmp/* /var/cache/apk/ /var/cache/misc /root/.gnupg /root/.cache /root/go /etc/apk
 
 COPY --from=builder /usr/sbin/angie /usr/sbin/angie
