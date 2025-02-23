@@ -141,13 +141,13 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie
 
 FROM docker.io/library/alpine:${BASE_VERSION}@sha256:${BASE_HASH}
-RUN addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --uid 101 --no-create-home \
+RUN set -ex && addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --uid 101 --no-create-home \
 && apk -U upgrade && apk add --no-cache \
     pcre \
     tini \
     brotli-libs \
     libxslt \
-&& apk del --purge ca-certificates apk-tools \
+&& apk del --purge apk-tools \
 && rm -rf /tmp/* /var/cache/apk/ /var/cache/misc /root/.gnupg /root/.cache /root/go /etc/apk
 
 COPY --from=builder /usr/sbin/angie /usr/sbin/angie
