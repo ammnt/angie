@@ -150,11 +150,11 @@ RUN set -ex && addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie -
 && apk del --purge apk-tools \
 && rm -rf /tmp/* /var/cache/apk/ /var/cache/misc /root/.gnupg /root/.cache /root/go /etc/apk
 
-COPY --from=builder /usr/sbin/angie /usr/sbin/angie
-COPY --from=builder /etc/angie /etc/angie
-COPY --from=builder /var/cache/angie /var/cache/angie
-COPY ./angie.conf /etc/angie/angie.conf
-COPY ./default.conf /etc/angie/conf.d/default.conf
+COPY --from=builder --chown=angie:angie /usr/sbin/angie /usr/sbin/angie
+COPY --from=builder --chown=angie:angie /etc/angie /etc/angie
+COPY --from=builder --chown=angie:angie /var/cache/angie /var/cache/angie
+COPY --chown=angie:angie ./angie.conf /etc/angie/angie.conf
+COPY --chown=angie:angie ./default.conf /etc/angie/conf.d/default.conf
 
 ENTRYPOINT [ "/sbin/tini", "--" ]
 
