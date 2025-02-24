@@ -134,23 +134,25 @@ RUN NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
     --add-module=/tmp/ngx_brotli \
 && make -j "${NB_CORES}" && make install && make clean && strip /usr/sbin/angie \
 && chown -R angie:angie /var/cache/angie && chmod -R g+w /var/cache/angie \
-&& chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie
+&& chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie && touch /tmp/error.log
 
-FROM docker.io/library/alpine:${BASE_VERSION}@sha256:${BASE_HASH}
-RUN set -ex && addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --uid 101 --no-create-home \
-&& apk -U upgrade && apk add --no-cache \
-    pcre \
-    tini \
-    brotli-libs \
-    libxslt \
-&& apk del --purge apk-tools \
-&& rm -rf /tmp/* /var/cache/apk/ /var/cache/misc /root/.gnupg /root/.cache /root/go /etc/apk
-
+FROM scratch
+COPY --from=builder /etc/passwd /etc/passwd
+COPY --from=builder /etc/group /etc/group
+COPY --from=builder /sbin/tini /sbin/tini
 COPY --from=builder --chown=angie:angie /usr/sbin/angie /usr/sbin/angie
 COPY --from=builder --chown=angie:angie /etc/angie /etc/angie
+COPY --from=builder --chown=angie:angie /tmp/error.log /tmp/error.log
 COPY --from=builder --chown=angie:angie /var/cache/angie /var/cache/angie
 COPY --chown=angie:angie ./angie.conf /etc/angie/angie.conf
 COPY --chown=angie:angie ./default.conf /etc/angie/conf.d/default.conf
+COPY --from=builder /lib/ld-musl-x86_64.so.1 /lib/
+COPY --from=builder /usr/lib/libbrotlienc.so.1 \
+                    /usr/lib/libpcre.so.1 \
+                    /usr/lib/libz.so.1 \
+                    /usr/lib/libxml2.so.2 \
+                    /usr/lib/libbrotlicommon.so.1 \
+                    /usr/lib/liblzma.so.5 /usr/lib/
 
 ENTRYPOINT [ "/sbin/tini", "--" ]
 
