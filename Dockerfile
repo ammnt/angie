@@ -5,7 +5,7 @@ ARG OPENSSL_VERSION=openssl-3.4.1
 ARG APP_VERSION=Angie-1.8.2
 ARG NJS_VERSION=0.8.9
 
-RUN set -ex && NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
+RUN set -ex \
 && addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --uid 101 --no-create-home \
 && apk -U upgrade && apk add --no-cache \
     pcre \
@@ -38,7 +38,7 @@ RUN set -ex && NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
 && git clone --recursive --depth 1 --single-branch -b ${OPENSSL_VERSION} https://github.com/openssl/openssl \
 && git clone --recursive --depth 1 --shallow-submodules https://github.com/google/ngx_brotli \
 && git clone --recursive --depth 1 --shallow-submodules --single-branch -b ${NJS_VERSION} https://github.com/nginx/njs \
-&& cd /tmp/njs && ./configure && make -j "${NB_CORES}" && make clean \
+&& cd /tmp/njs && ./configure && make -j $(nproc) && make clean \
 && mkdir /var/cache/angie && cd /tmp/angie && ./configure \
     --prefix=/etc/angie \
     --sbin-path=/usr/sbin/angie \
@@ -121,7 +121,7 @@ RUN set -ex && NB_CORES="${BUILD_CORES-$(getconf _NPROCESSORS_CONF)}" \
     --without-mail_smtp_module \
     --add-module=/tmp/njs/nginx \
     --add-module=/tmp/ngx_brotli \
-&& make -j "${NB_CORES}" && make install && make clean && strip /usr/sbin/angie \
+&& make -j $(nproc) && make install && make clean && strip /usr/sbin/angie \
 && chown -R angie:angie /var/cache/angie && chmod -R g+w /var/cache/angie \
 && chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie && touch /tmp/error.log
 
