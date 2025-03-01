@@ -252,7 +252,7 @@ jobs:
           cosign verify --key cosign.pub ammnt/angie:${{ env.APP_VERSION }}
 
       - name: Run deploy update on the server✅
-        uses: appleboy/ssh-action@v1.2.0
+        uses: appleboy/ssh-action@v1.2.1
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
