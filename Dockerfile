@@ -8,7 +8,7 @@ ARG PCRE_VERSION=pcre2-10.45
 ARG ZLIB_VERSION=v1.3.1
 
 RUN set -ex \
-&& addgroup -S angie && adduser -S angie -s /sbin/nologin -G angie --uid 101 --no-create-home \
+&& addgroup --system --gid 101 angie && adduser --disabled-password --shell /bin/false --ingroup angie --uid 101 --no-create-home angie \
 && apk -U upgrade && apk add --no-cache \
     gcc \
     make \
