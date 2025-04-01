@@ -60,6 +60,7 @@ RUN set -ex \
     --with-openssl-opt=no-ssl3 \
     --with-openssl-opt=no-shared \
     --with-openssl-opt=no-weak-ssl-ciphers \
+    --with-openssl-opt=no-tls-deprecated-ec \
     --with-pcre=/tmp/pcre2 \
     --with-zlib=/tmp/zlib \
     --with-cpu-opt="generic" \
@@ -95,12 +96,14 @@ RUN set -ex \
     --with-ld-opt="-Wl,-z,now" \
     --with-ld-opt="-pie" \
     --with-ld-opt="-Wl,--gc-sections" \
+    --with-file-aio \
     --with-compat \
     --with-pcre-jit \
     --with-threads \
     --with-http_realip_module \
     --with-http_stub_status_module \
     --with-http_ssl_module \
+    --with-http_acme_module \
     --with-http_v2_module \
     --with-http_v3_module \
     --with-http_gzip_static_module \
