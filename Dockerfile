@@ -132,7 +132,7 @@ RUN set -ex \
     --add-module=/tmp/ngx_brotli \
 && make -j $(nproc) && make install && make clean && strip /usr/sbin/angie \
 && chown -R angie:angie /var/cache/angie && chmod -R g+w /var/cache/angie \
-&& chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie && touch /tmp/error.log
+&& chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie && rm -rf /tmp/* && touch /tmp/error.log
 
 FROM scratch
 COPY --from=builder /etc/passwd /etc/passwd

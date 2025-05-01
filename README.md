@@ -7,14 +7,14 @@
 ![GitHub Maintained](https://img.shields.io/badge/maintained-yes-yellow)
 
 The Docker image is ready to use:<br>
-<code>docker run -d --name angie -p 80:8080/tcp -p 443:8443/tcp -p 443:8443/udp ghcr.io/ammnt/angie:latest</code><br>
+<code>ghcr.io/ammnt/angie:latest</code><br>
 or<br>
-<code>docker run -d --name angie -p 80:8080/tcp -p 443:8443/tcp -p 443:8443/udp ammnt/angie:latest</code><br>
+<code>docker.io/ammnt/angie:latest</code><br>
 or with Docker Compose deployment:
 ```
 services:
   angie:
-    image: ammnt/angie:latest
+    image: docker.io/ammnt/angie:latest
     user: "101:101"
     read_only: true
     privileged: false
@@ -26,6 +26,7 @@ services:
     security_opt:
       - no-new-privileges:true
       - apparmor:docker-angie
+      - seccomp:./angie-seccomp.json
     volumes:
       - "./conf:/etc/angie:ro"
       - "/etc/timezone:/etc/timezone:ro"
@@ -35,7 +36,7 @@ services:
 
 # Description:
 
-- Built on latest version of Alpine Linux - low size (~5 MB);
+- Base image: Alpine Linux (only ~5 MB);
 - Runtime on scratch image - with zero bloat;
 - Multi-stage building with statically linked binary;
 - OpenSSL with HTTP/3 and QUIC support:<br>
@@ -47,7 +48,7 @@ https://github.com/openssl/openssl
 - NJS and Brotli support;
 - PCRE with JIT compilation;
 - zlib library latest version;
-- Rootless master process - unprivileged container;
+- Rootless master process (unprivileged container);
 - Async I/O threads module;
 - "Distroless" image - reduced attack surface (removed SHELL, UNIX tools, package manager etc);
 - Removed unnecessary modules;
@@ -61,4 +62,4 @@ https://github.com/ammnt/angie/blob/main/Dockerfile
 
 # Note:
 
-Feel free to <a href="https://github.com/ammnt/angie/issues/new">contact me</a> with more improvements🙋
+Feel free to <a href="https://github.com/ammnt/angie/issues/new">contact me</a> with more improvements 🙋
