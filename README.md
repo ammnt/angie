@@ -1,7 +1,7 @@
 # Distroless Angie with HTTP/3 and QUIC support🚀
 
 [![Build and push image📦](https://github.com/ammnt/angie/actions/workflows/build.yml/badge.svg)](https://github.com/ammnt/angie/actions/workflows/build.yml)
-![version](https://img.shields.io/badge/version-1.9.1-blue)
+![version](https://img.shields.io/badge/version-1.10.0-blue)
 [![GitHub issues open](https://img.shields.io/github/issues/ammnt/angie.svg)](https://github.com/ammnt/angie/issues)
 ![GitHub Maintained](https://img.shields.io/badge/open%20source-yes-orange)
 ![GitHub Maintained](https://img.shields.io/badge/maintained-yes-yellow)
