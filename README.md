@@ -1,7 +1,7 @@
 # Distroless Angie with HTTP/3 and QUIC support🚀
 
 [![Build and push image📦](https://github.com/ammnt/angie/actions/workflows/build.yml/badge.svg)](https://github.com/ammnt/angie/actions/workflows/build.yml)
-![version](https://img.shields.io/badge/version-1.10.0-blue)
+![version](https://img.shields.io/badge/version-1.10.1-blue)
 [![GitHub issues open](https://img.shields.io/github/issues/ammnt/angie.svg)](https://github.com/ammnt/angie/issues)
 ![GitHub Maintained](https://img.shields.io/badge/open%20source-yes-orange)
 ![GitHub Maintained](https://img.shields.io/badge/maintained-yes-yellow)
@@ -37,7 +37,7 @@ services:
 # Description:
 
 - Base image: Alpine Linux (only ~5 MB);
-- Hardened image (secure, minimal and production-ready) - recommended to use in Rootless mode:
+- Hardened image (secure, minimal and production-ready) - recommended to use in Rootless mode:<br>
 https://docs.docker.com/engine/security/rootless/
 - Runtime on scratch image - with zero bloat;
 - Multi-stage building with statically linked binary;
@@ -49,7 +49,7 @@ https://github.com/openssl/openssl
 - Built using hardening GCC flags;
 - NJS and Brotli support;
 - PCRE with JIT compilation;
-- zlib library latest version;
+- zlib-ng library latest version;
 - Rootless master process (unprivileged container);
 - Async I/O threads module;
 - "Distroless" image - reduced attack surface (removed SHELL, UNIX tools, package manager etc);

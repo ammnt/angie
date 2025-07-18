@@ -10,7 +10,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  APP_VERSION: 1.10.0
+  APP_VERSION: 1.10.1
 
 jobs:
   build:
@@ -30,7 +30,7 @@ jobs:
       - name: Install cosign🔒
         uses: sigstore/cosign-installer@v3.9.1
         with:
-          cosign-release: "v2.5.2"
+          cosign-release: "v2.5.3"
 
       - name: Setup Docker buildx🛠️
         uses: docker/setup-buildx-action@v3.11.1
@@ -137,7 +137,7 @@ jobs:
           fail-build: false
           severity-cutoff: critical
           output-format: sarif
-          grype-version: v0.95.0
+          grype-version: v0.96.0
           output-file: "${{ github.workspace }}/grype.report.json"
 
       - name: Upload Grype report📊
