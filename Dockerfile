@@ -63,6 +63,7 @@ RUN set -ex \
     --with-openssl-opt=no-weak-ssl-ciphers \
     --with-openssl-opt=no-tls-deprecated-ec \
     --with-openssl-opt=enable-quic \
+    --with-openssl-opt=enable-ktls \
     --with-pcre=/tmp/pcre2 \
     --with-zlib=/tmp/zlib-ng \
     --with-cpu-opt="generic" \
