@@ -7,10 +7,10 @@
 ![GitHub Maintained](https://img.shields.io/badge/open%20source-yes-orange)
 ![GitHub Maintained](https://img.shields.io/badge/maintained-yes-yellow)
 
-> **Production-ready, security-focused Angie container with HTTP/3, QUIC, and post-quantum cryptography support.**
+> **Production-ready, security-focused Angie container with HTTP/3, QUIC, and PQC support.**
 
 > [!IMPORTANT]
-> QuicTLS is now deprecated. I made a choice in favor of OpenSSL, since this library natively supports OCSP, PQC and QUIC⚠️
+> QuicTLS is now deprecated. I use OpenSSL, since this library natively supports OCSP, PQC and QUIC⚠️
 
 > [!TIP]
 > You can find an example configuration file in the repository for successfully configuring HTTP3 and PQC💡
