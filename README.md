@@ -28,11 +28,11 @@
 
 ## 🌐 Image Variants
 
-| Registry | Tags | Description |
-|----------|------|-------------|
-| **Docker Hub** | `ammnt/angie:latest` | Primary registry with latest stable |
-| **GitHub Container Registry** | `ghcr.io/ammnt/angie:latest` | GitHub registry with latest stable |
-| **Both** | `:latest` | Always points to current stable |
+Docker Hub:<br>
+> **ammnt/angie:latest**
+
+GitHub Container Registry:<br>
+> **ghcr.io/ammnt/angie:latest**
 
 All images are **signed with Cosign** and include **provenance attestation**.
 
