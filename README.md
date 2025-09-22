@@ -1,4 +1,4 @@
-# 🚀 Distroless Angie: Ultimate Hardened & Optimized Container
+# 🚀 Distroless Angie: Hardened & optimized image
 
 [![Build and Push](https://github.com/ammnt/angie/actions/workflows/build.yml/badge.svg)](https://github.com/ammnt/angie/actions/workflows/build.yml)
 ![Version](https://img.shields.io/github/v/release/ammnt/angie)
