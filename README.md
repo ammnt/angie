@@ -2,7 +2,6 @@
 
 [![Build and Push](https://github.com/ammnt/angie/actions/workflows/build.yml/badge.svg)](https://github.com/ammnt/angie/actions/workflows/build.yml)
 ![Version](https://img.shields.io/github/v/release/ammnt/angie)
-![Security](https://img.shields.io/badge/security-hardened-brightgreen)
 ![Size](https://img.shields.io/badge/size-ultra--lightweight-blue)
 [![GitHub issues open](https://img.shields.io/github/issues/ammnt/angie.svg)](https://github.com/ammnt/angie/issues)
 ![GitHub Maintained](https://img.shields.io/badge/open%20source-yes-orange)
