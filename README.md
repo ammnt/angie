@@ -21,7 +21,7 @@
 ### **Architecture Advantages**
 - **Distroless base** - Built from `scratch` with zero bloat
 - **Static compilation** - Fully static binary with 30+ GCC hardening flags
-- **Minimal attack surface** - No shell, no package manager vs reduced or full OS environment
+- **Minimal attack surface** - No shell, no package manager
 - **Native HTTP/3 support** - OpenSSL 3.x with QUIC without patches or experimental implementations
 - **Supply chain security** - Cosign signatures + SLSA attestation
 - **Comprehensive scanning** - 7+ security tools (Docker Scout, Trivy, Snyk, Grype, Dockle, Syft, Dive)
