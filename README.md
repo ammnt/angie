@@ -18,9 +18,9 @@
 
 ## 🎯 Why Choose This Image?
 
-| Feature | This Image | Standard Angie Alpine | Official Angie |
+| Feature | This Image | Standard image | Official image |
 |---------|------------|----------------------|----------------|
-| **Base Image** | `scratch` (zero-bloat) | Alpine Linux (~25MB) | Debian (~80MB+) |
+| **Base Image** | `scratch` (zero-bloat) | Alpine (~25MB) | Debian (~80MB+) |
 | **Attack Surface** | **Minimal** (no shell, no package manager) | Reduced | Full OS environment |
 | **Binary** | **Statically linked**, hardened with 30+ GCC security flags | Dynamically linked | Dynamically linked |
 | **Security Scanning** | 7+ tools (Docker Scout, Trivy, Snyk, Grype, Dockle, Syft, Dive) | Limited or none | Basic |
@@ -77,7 +77,7 @@ services:
 
 ### **Compilation Hardening**
 - **30+ GCC security flags** including:
-  - `-D_FORTIFY_SOURCE=3`, `-fstack-protector-strong`
+  - `-D_FORTIFY_SOURCE=3`, `-fhardened`, `-fstack-protector-strong`
   - `-fstack-clash-protection`, `-fPIE`, `-pie`
   - `-ftrivial-auto-var-init=zero` (prevents data leaks)
   - `-fcf-protection=full` (Control-Flow Integrity)
