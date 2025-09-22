@@ -23,7 +23,7 @@
 | **Attack Surface** | **Minimal** (no shell, no package manager) | Reduced | Full OS environment |
 | **Binary** | **Statically linked**, hardened with 30+ GCC security flags | Dynamically linked | Dynamically linked |
 | **Security Scanning** | 7+ tools (Docker Scout, Trivy, Snyk, Grype, Dockle, Syft, Dive) | Limited or none | Basic |
-| **HTTP/3 + QUIC** | ✅ Native OpenSSL 3.x support | ❌ Requires patches | ❌ Experimental only |
+| **HTTP/3 + QUIC** | ✅ Native OpenSSL 3.x support | ❌ Patches only | ❌ Experimental |
 | **Supply Chain Security** | ✅ Cosign signatures + SLSA attestation | ❌ | ❌ |
 
 ## 🌐 Image Variants
