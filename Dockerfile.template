@@ -15,14 +15,12 @@ RUN set -ex \
     git \
     mimalloc2-dev \
     tini \
-    brotli-libs \
     build-base \
     ca-certificates \
     linux-headers \
     tzdata \
     upx \
     perl \
-    brotli-dev \
     cmake \
 && update-ca-certificates && cd /tmp \
 && git clone --depth 1 --recursive --single-branch -b "Angie-${APP_VERSION}" https://github.com/webserver-llc/angie && rm -rf /tmp/angie/html/* \
@@ -144,6 +142,7 @@ RUN set -ex \
 && make -j $(nproc) && make install && make clean && strip --strip-all /usr/sbin/angie \
 && chown -R angie:angie /var/cache/angie && chmod -R g+w /var/cache/angie \
 && chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie \
+&& ldd /usr/sbin/angie || true \
 && upx --best --lzma /usr/sbin/angie && rm -rf /tmp/* && touch /tmp/error.log
 
 FROM scratch
