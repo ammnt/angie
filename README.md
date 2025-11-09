@@ -64,8 +64,6 @@ services:
       - seccomp=./angie-seccomp.json
     volumes:
       - "./conf:/etc/angie:ro"
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
 ...
 ```
 ## 🔥 Why Choose This Image?
