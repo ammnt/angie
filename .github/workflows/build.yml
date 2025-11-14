@@ -246,5 +246,5 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           script: |
             cd /home/${{ secrets.SERVER_USERNAME }}/agh
-            /home/${{ secrets.SERVER_USERNAME }}/bin/docker compose pull web dns
-            /home/${{ secrets.SERVER_USERNAME }}/bin/docker compose up -d web dns
+            /usr/bin/docker compose pull web dns
+            /usr/bin/docker compose up -d web dns
