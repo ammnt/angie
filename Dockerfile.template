@@ -52,8 +52,8 @@ RUN set -ex \
     --sbin-path=/usr/sbin/angie \
     --user=angie \
     --group=angie \
-    --http-log-path=/tmp/access.log \
-    --error-log-path=/tmp/error.log \
+    --http-log-path=/dev/stdout \
+    --error-log-path=/dev/stderr \
     --conf-path=/etc/angie/angie.conf \
     --pid-path=/tmp/angie.pid \
     --lock-path=/tmp/angie.lock \
@@ -143,15 +143,15 @@ RUN set -ex \
 && chown -R angie:angie /var/cache/angie && chmod -R g+w /var/cache/angie \
 && chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie \
 && ldd /usr/sbin/angie || true \
-&& upx --best --lzma /usr/sbin/angie && rm -rf /tmp/* && touch /tmp/error.log
+&& upx --best --lzma /usr/sbin/angie && rm -rf /tmp/*
 
 FROM scratch
 COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /etc/group /etc/group
 COPY --from=builder /sbin/tini /sbin/tini
+COPY --from=builder /tmp /tmp
 COPY --from=builder --chown=angie:angie /usr/sbin/angie /usr/sbin/angie
 COPY --from=builder --chown=angie:angie /etc/angie /etc/angie
-COPY --from=builder --chown=angie:angie /tmp/error.log /tmp/error.log
 COPY --from=builder --chown=angie:angie /var/cache/angie /var/cache/angie
 COPY --chown=angie:angie ./angie.conf /etc/angie/angie.conf
 COPY --chown=angie:angie ./default.conf /etc/angie/conf.d/default.conf
