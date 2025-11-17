@@ -1,11 +1,17 @@
-ARG BASE_VERSION
-ARG BASE_HASH
-FROM alpine:${BASE_VERSION}@sha256:${BASE_HASH} AS builder
-ARG OPENSSL_VERSION
-ARG APP_VERSION
-ARG PCRE_VERSION
-ARG ZLIB_VERSION
-ARG BUILD_DATE
+# ARG BASE_VERSION
+# ARG BASE_HASH
+# FROM alpine:${BASE_VERSION}@sha256:${BASE_HASH} AS builder
+# ARG OPENSSL_VERSION
+# ARG APP_VERSION
+# ARG PCRE_VERSION
+# ARG ZLIB_VERSION
+# ARG BUILD_DATE
+
+FROM alpine:3.22.2@sha256:4b7ce07002c69e8f3d704a9c5d6fd3053be500b7f1c69fc0d80990c2ad8dd412 AS builder
+ARG OPENSSL_VERSION=3.6.0
+ARG APP_VERSION=1.10.3
+ARG PCRE_VERSION=10.47
+ARG ZLIB_VERSION=2.2.5
 
 RUN set -e \
 && addgroup --system --gid 101 angie && adduser --disabled-password --shell /bin/false --ingroup angie --uid 101 --no-create-home angie \
@@ -14,7 +20,6 @@ RUN set -e \
     make \
     git \
     mimalloc2-dev \
-    tini \
     build-base \
     ca-certificates \
     linux-headers \
@@ -48,72 +53,52 @@ RUN set -e \
 && sed -i "s/compat=0/compat=1/" /tmp/zlib-ng/configure && cd /tmp/zlib-ng && ./configure --zlib-compat \
 && make && make install && cd /tmp/angie \
 && ./configure \
-    --prefix=/etc/angie \
-    --sbin-path=/usr/sbin/angie \
-    --user=angie \
-    --group=angie \
-    --http-log-path=/dev/stdout \
-    --error-log-path=/dev/stderr \
-    --conf-path=/etc/angie/angie.conf \
-    --pid-path=/tmp/angie.pid \
-    --lock-path=/tmp/angie.lock \
-    --http-client-body-temp-path=/tmp/client_temp \
-    --http-proxy-temp-path=/tmp/proxy_temp \
-    --http-fastcgi-temp-path=/tmp/fastcgi_temp \
+    --prefix="/etc/angie" \
+    --sbin-path="/usr/sbin/angie" \
+    --user="angie" \
+    --group="angie" \
+    --http-log-path="/dev/stdout" \
+    --error-log-path="/dev/stderr" \
+    --conf-path="/etc/angie/angie.conf" \
+    --pid-path="/tmp/angie.pid" \
+    --lock-path="/tmp/angie.lock" \
+    --http-client-body-temp-path="/tmp/client_temp" \
+    --http-proxy-temp-path="/tmp/proxy_temp" \
+    --http-fastcgi-temp-path="/tmp/fastcgi_temp" \
     --with-openssl="/tmp/openssl" \
-    --with-openssl-opt=enable-ec_nistp_64_gcc_128 \
-    --with-openssl-opt=no-ssl2 \
-    --with-openssl-opt=no-ssl3 \
-    --with-openssl-opt=no-shared \
-    --with-openssl-opt=no-weak-ssl-ciphers \
-    --with-openssl-opt=no-tls-deprecated-ec \
-    --with-openssl-opt=enable-quic \
-    --with-openssl-opt=enable-ktls \
+    --with-openssl-opt="enable-ec_nistp_64_gcc_128" \
+    --with-openssl-opt="no-ssl2" \
+    --with-openssl-opt="no-ssl3" \
+    --with-openssl-opt="no-shared" \
+    --with-openssl-opt="no-weak-ssl-ciphers" \
+    --with-openssl-opt="no-tls-deprecated-ec" \
+    --with-openssl-opt="enable-quic" \
+    --with-openssl-opt="enable-ktls" \
     --with-pcre="/tmp/pcre2" \
     --with-zlib="/tmp/zlib-ng" \
-    --with-cpu-opt="generic" \
     --with-cc-opt="-static -static-libgcc" \
     --with-ld-opt="-static" \
     --with-cc-opt="-O2" \
-    --with-cc-opt="-march=native" \
-    --with-cc-opt="-falign-functions=32" \
-    --with-cc-opt="-flto" \
+    --with-cc-opt="-fhardened" \
+    --with-cc-opt="-D_FORTIFY_SOURCE=3" \
+    --with-cc-opt="-D_GLIBCXX_ASSERTIONS" \
+    --with-cc-opt="-ftrivial-auto-var-init=zero" \
+    --with-cc-opt="-Wl,-z,relro,-z,now" \
     --with-cc-opt="-fstack-protector-strong" \
-    --with-cc-opt="-param=ssp-buffer-size=4" \
-    --with-cc-opt="-Wimplicit-fallthrough=0" \
+    --with-cc-opt="-fstack-clash-protection" \
+    --with-cc-opt="-fcf-protection=full" \
     --with-cc-opt="-Wformat" \
     --with-cc-opt="-Wformat-security" \
     --with-cc-opt="-Werror=format-security" \
     --with-cc-opt="-fcode-hoisting" \
     --with-cc-opt="-Wno-deprecated-declarations" \
-    --with-cc-opt="-fhardened" \
-    --with-cc-opt="-D_FORTIFY_SOURCE=3" \
-    --with-cc-opt="-D_GLIBCXX_ASSERTIONS" \
-    --with-cc-opt="-ftrivial-auto-var-init=zero" \
-    --with-cc-opt="-fcf-protection=full" \
     --with-cc-opt="-DTCP_FASTOPEN=23" \
-    --with-cc-opt="-fPIE" \
-    --with-cc-opt="-fno-semantic-interposition" \
-    --with-cc-opt="-fno-plt" \
-    --with-cc-opt="-std=c11" \
-    --with-cc-opt="-fstack-clash-protection" \
-    --with-cc-opt="-fdata-sections" \
-    --with-cc-opt="-ffunction-sections" \
-    --with-ld-opt="-s" \
-    --with-ld-opt="-lrt" \
-    --with-ld-opt="-lmimalloc" \
-    --with-ld-opt="-lpcre" \
-    --with-ld-opt="-Wl,-z,relro" \
-    --with-ld-opt="-Wl,-z,now" \
-    --with-ld-opt="-pie" \
-    --with-ld-opt="-Wl,--gc-sections" \
     --with-compat \
     --with-pcre-jit \
     --with-threads \
     --with-http_realip_module \
     --with-http_stub_status_module \
     --with-http_ssl_module \
-    --with-http_acme_module \
     --with-http_v2_module \
     --with-http_v3_module \
     --with-http_gzip_static_module \
@@ -138,23 +123,21 @@ RUN set -e \
     --without-mail_pop3_module \
     --without-mail_imap_module \
     --without-mail_smtp_module \
-    --add-module=/tmp/ngx_brotli \
+    --add-module="/tmp/ngx_brotli" \
 && make -j $(nproc) && make install && make clean && strip --strip-all /usr/sbin/angie \
+&& file /usr/sbin/angie && ldd /usr/sbin/angie || true \
 && chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie \
 && upx --best --lzma /usr/sbin/angie && rm -rf /tmp/*
 
 FROM scratch
 COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /etc/group /etc/group
-COPY --from=builder /sbin/tini /sbin/tini
 COPY --from=builder /tmp /tmp
 COPY --from=builder --chown=angie:angie /usr/sbin/angie /usr/sbin/angie
 COPY --from=builder --chown=angie:angie /etc/angie /etc/angie
 COPY --chown=angie:angie ./angie.conf /etc/angie/angie.conf
 COPY --chown=angie:angie ./default.conf /etc/angie/conf.d/default.conf
 COPY --from=builder /lib/ld-musl-x86_64.so.1 /lib/
-
-ENTRYPOINT [ "/sbin/tini", "--" ]
 
 EXPOSE 8080/tcp 8443/tcp 8443/udp
 LABEL description=" Distroless Angie with HTTP/3, QUIC and PQC support🚀" \
