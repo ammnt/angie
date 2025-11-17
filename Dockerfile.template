@@ -73,6 +73,7 @@ RUN set -e \
     --with-cc-opt="-static -static-libgcc" \
     --with-ld-opt="-static" \
     --with-cc-opt="-O2" \
+    --with-cc-opt="-march=native" \
     --with-cc-opt="-fhardened" \
     --with-cc-opt="-D_FORTIFY_SOURCE=3" \
     --with-cc-opt="-D_GLIBCXX_ASSERTIONS" \
@@ -119,7 +120,6 @@ RUN set -e \
     --without-mail_smtp_module \
     --add-module="/tmp/ngx_brotli" \
 && make -j $(nproc) && make install && make clean && strip --strip-all /usr/sbin/angie \
-&& file /usr/sbin/angie && ldd /usr/sbin/angie || true \
 && chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie \
 && upx --best --lzma /usr/sbin/angie && rm -rf /tmp/*
 
