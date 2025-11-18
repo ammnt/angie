@@ -137,11 +137,11 @@ COPY --chown=angie:angie ./default.conf /etc/angie/conf.d/default.conf
 ENTRYPOINT [ "/sbin/tini", "--" ]
 
 EXPOSE 8080/tcp 8443/tcp 8443/udp
-LABEL description=" Distroless Angie with HTTP/3, QUIC and PQC support🚀" \
+LABEL description="Distroless Angie with HTTP/3, QUIC and PQC support🚀" \
       maintainer="ammnt <admin@msftcnsi.com>" \
-      org.opencontainers.image.description=" Distroless Angie with HTTP/3, QUIC and PQC support🚀" \
+      org.opencontainers.image.description="Distroless Angie with HTTP/3, QUIC and PQC support🚀" \
       org.opencontainers.image.authors="ammnt, admin@msftcnsi.com" \
-      org.opencontainers.image.title=" Distroless Angie with HTTP/3, QUIC and PQC support🚀" \
+      org.opencontainers.image.title="Distroless Angie with HTTP/3, QUIC and PQC support🚀" \
       org.opencontainers.image.source="https://github.com/ammnt/angie/" \
       org.opencontainers.image.created=${BUILD_DATE} \
       org.opencontainers.image.documentation="https://github.com/ammnt/angie/blob/main/README.md" \
