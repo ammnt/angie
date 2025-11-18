@@ -179,9 +179,8 @@ jobs:
           docker tag ghcr.io/ammnt/angie:${{ env.APP_VERSION }} ammnt/angie:latest
           docker push ghcr.io/ammnt/angie --all-tags
           docker push ammnt/angie --all-tags
-          DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/ammnt/angie:${{ env.APP_VERSION }} | \
-            sed -e "s|ghcr.io/ammnt/angie@||g" | \
-            sed -e "s|ammnt/angie@||g")
+          DIGEST=$(docker inspect -f='{{index .RepoDigests 0}}' ghcr.io/ammnt/angie:${{ env.APP_VERSION }} | \
+            | cut -d'@' -f2
           echo "DIGEST=$DIGEST" >> $GITHUB_ENV
 
       - name: Attestation the Docker image📍
@@ -201,8 +200,8 @@ jobs:
         run: |
           cosign sign -y --recursive --key env://COSIGN_KEY ghcr.io/ammnt/angie@${{ env.DIGEST }}
           cosign sign -y --recursive --key env://COSIGN_KEY ammnt/angie@${{ env.DIGEST }}
-          cosign sign -y --recursive --key env://COSIGN_KEY ghcr.io/ammnt/angie@${{ env.APP_VERSION }}
-          cosign sign -y --recursive --key env://COSIGN_KEY ammnt/angie@${{ env.APP_VERSION }}
+          cosign sign -y --recursive --key env://COSIGN_KEY ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
+          cosign sign -y --recursive --key env://COSIGN_KEY ammnt/angie:${{ env.APP_VERSION }}
           # cosign verify --key cosign.pub ghcr.io/ammnt/angie@${{ env.DIGEST }}
           # cosign verify --key cosign.pub ammnt/angie@${{ env.DIGEST }}
           docker system prune -f ; rm -rf ${{ github.workspace }}/*
