@@ -201,8 +201,10 @@ jobs:
         run: |
           cosign sign -y --recursive --key env://COSIGN_KEY ghcr.io/ammnt/angie@${{ env.DIGEST }}
           cosign sign -y --recursive --key env://COSIGN_KEY ammnt/angie@${{ env.DIGEST }}
-          cosign verify --key cosign.pub ghcr.io/ammnt/angie@${{ env.DIGEST }}
-          cosign verify --key cosign.pub ammnt/angie@${{ env.DIGEST }}
+          cosign sign -y --recursive --key env://COSIGN_KEY ghcr.io/ammnt/angie@${{ env.APP_VERSION }}
+          cosign sign -y --recursive --key env://COSIGN_KEY ammnt/angie@${{ env.APP_VERSION }}
+          # cosign verify --key cosign.pub ghcr.io/ammnt/angie@${{ env.DIGEST }}
+          # cosign verify --key cosign.pub ammnt/angie@${{ env.DIGEST }}
           docker system prune -f ; rm -rf ${{ github.workspace }}/*
 
       - name: Run deploy update on the server✅
