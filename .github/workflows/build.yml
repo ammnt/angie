@@ -13,7 +13,7 @@ env:
   DIVE_VERSION: "0.13.1"
   GRYPE_VERSION: "0.103.0"
   SYFT_VERSION: "1.38.0"
-  ARCH_PLATFORM: linux/amd64
+  ARCH_PLATFORMS: linux/amd64
 
 jobs:
   build:
@@ -73,7 +73,7 @@ jobs:
           provenance: false
           context: .
           file: ./Dockerfile.template
-          platforms: ${{ env.ARCH_PLATFORM }}
+          platforms: ${{ env.ARCH_PLATFORMS }}
           tags: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
