@@ -122,11 +122,13 @@ RUN set -e \
     --add-module="/tmp/ngx_brotli" \
 && make -j $(nproc) && make install && make clean && strip --strip-all /usr/sbin/angie \
 && chown -R angie:angie /etc/angie && chmod -R g+w /etc/angie \
-&& upx --best --lzma /usr/sbin/angie && rm -rf /tmp/*
+&& upx --best --lzma /usr/sbin/angie && rm -rf /tmp/* \
+&& echo "angie:!:65534:0:99999:7:::" > /tmp/shadow
 
 FROM scratch
 COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /etc/group /etc/group
+COPY --from=builder /tmp/shadow /etc/shadow
 COPY --from=builder /sbin/tini-static /sbin/tini
 COPY --from=builder /tmp /tmp
 COPY --from=builder --chown=angie:angie /usr/sbin/angie /usr/sbin/angie
