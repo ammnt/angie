@@ -99,6 +99,12 @@ jobs:
           sleep 10 && docker ps -a
           curl -sSI http://127.0.0.1:8080 || exit 1
 
+      - name: Upload the Slim report📊
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: MintToolkit Mint (Slim) report
+          path: slim.report.json
+
       - name: Explore the Docker image with Dive🔍
         env:
           CI: true
@@ -168,26 +174,6 @@ jobs:
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: snyk.sarif
-
-      - name: Analyze image with Dockle💊
-        uses: goodwithtech/dockle-action@main
-        with:
-          image: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
-          format: "sarif"
-          output: "dockle.sarif"
-          exit-code: "1"
-          exit-level: "warn"
-          ignore: "CIS-DI-0010"
-
-      - name: List files💾
-        run: |
-          pwd
-          ls -lash
-
-      - name: Upload Dockle report📊
-        uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: dockle.sarif
 
       - name: Analyze image with Syft💊
         uses: anchore/sbom-action@v0.20.10
