@@ -88,7 +88,6 @@ jobs:
 
       - name: Slim and test the Docker image🚀
         run: |
-          docker images
           curl -sSL -o ds.tar.gz https://github.com/mintoolkit/mint/releases/download/${{ env.MINT_VERSION }}/dist_linux.tar.gz
           tar -xf ds.tar.gz
           ./dist_linux/mint --quiet build \
@@ -171,13 +170,7 @@ jobs:
       - name: Upload all reports📊
         uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: |
-            ${{ github.workspace }}/scout.sarif
-            ${{ github.workspace }}/trivy.sarif
-            ${{ github.workspace }}/grype.sarif
-            ${{ github.workspace }}/snyk.sarif
-            ${{ github.workspace }}/dockle.sarif
-          category: container-security-scan
+          sarif_file: "**/*.sarif"
 
       - name: Push the Docker images to registries💾
         run: |
