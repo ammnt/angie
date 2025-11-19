@@ -170,13 +170,7 @@ jobs:
       - name: Upload all reports📊
         uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: |
-            trivy.sarif
-            snyk.sarif
-            scout.sarif
-            grype.sarif
-            dockle.sarif
-          category: container-security
+          sarif_file: "${{ github.workspace }}/"
 
       - name: Push the Docker images to registries💾
         run: |
