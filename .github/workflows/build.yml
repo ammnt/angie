@@ -87,6 +87,7 @@ jobs:
 
       - name: Slim and test the Docker image🚀
         run: |
+          docker images
           curl -sSL -o ds.tar.gz https://github.com/mintoolkit/mint/releases/download/${{ env.MINT_VERSION }}/dist_linux.tar.gz
           tar -xf ds.tar.gz
           ./dist_linux/mint build \
