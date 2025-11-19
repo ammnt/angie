@@ -179,6 +179,11 @@ jobs:
           exit-level: "warn"
           ignore: "CIS-DI-0010"
 
+      - name: List files💾
+        run: |
+          pwd
+          ls -lash
+
       - name: Upload Dockle report📊
         uses: github/codeql-action/upload-sarif@v4
         with:
