@@ -162,7 +162,7 @@ jobs:
           image: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
           sarif: true
           json: false
-          args: --sarif-file-output=${{ github.workspace }}/snyk.sarif
+          args: --sarif-file-output=snyk.sarif
 
       - name: Upload Snyk report📊
         uses: github/codeql-action/upload-sarif@v4
