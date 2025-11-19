@@ -74,6 +74,7 @@ jobs:
           context: .
           file: ./Dockerfile.template
           platforms: ${{ env.ARCH_PLATFORMS }}
+          load: ${{ github.event_name != 'pull_request' }}
           tags: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -90,7 +91,7 @@ jobs:
           docker images
           curl -sSL -o ds.tar.gz https://github.com/mintoolkit/mint/releases/download/${{ env.MINT_VERSION }}/dist_linux.tar.gz
           tar -xf ds.tar.gz
-          ./dist_linux/mint build \
+          ./dist_linux/mint --quiet build \
             --target ghcr.io/ammnt/angie:${{ env.APP_VERSION }} \
             --tag ghcr.io/ammnt/angie:${{ env.APP_VERSION }} \
             --http-probe=false \
