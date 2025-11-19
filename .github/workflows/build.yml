@@ -110,8 +110,9 @@ jobs:
         with:
           command: cves,sbom
           image: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
-          sarif-file: ${{ github.workspace }}/scout.report.json
+          sarif-file: ${{ github.workspace }}/scout.sarif
           write-comment: true
+          summary: true
           github-token: ${{ secrets.GH_TOKEN }}
 
       - name: Analyze image with Trivy💊
@@ -119,8 +120,8 @@ jobs:
         with:
           image-ref: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
           scan-type: image
-          format: "json"
-          output: "${{ github.workspace }}/trivy.report.json"
+          format: "sarif"
+          output: "${{ github.workspace }}/trivy.sarif"
           severity: "MEDIUM,HIGH,CRITICAL"
           scanners: "vuln"
           github-pat: ${{ secrets.GH_TOKEN }}
@@ -131,25 +132,27 @@ jobs:
           image: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
           fail-build: false
           severity-cutoff: critical
-          output-format: json
+          output-format: sarif
           grype-version: v${{ env.GRYPE_VERSION }}
-          output-file: ${{ github.workspace }}/grype.report.json
+          output-file: ${{ github.workspace }}/grype.sarif
 
       - name: Analyze image with Snyk💊
         uses: snyk/actions/docker@master
+        continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           image: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
-          sarif: false
-          json: true
+          sarif: true
+          json: false
+          args: --sarif-file-output=${{ github.workspace }}/snyk.sarif
 
       - name: Analyze image with Dockle💊
         uses: goodwithtech/dockle-action@main
         with:
           image: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
-          format: "json"
-          output: "dockle.report.json"
+          format: "sarif"
+          output: "dockle.sarif"
           exit-code: "1"
           exit-level: "warn"
           ignore: "CIS-DI-0010"
@@ -159,17 +162,19 @@ jobs:
         with:
           syft-version: v${{ env.SYFT_VERSION }}
           image: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
-          format: spdx-json
-          output-file: ${{ github.workspace }}/syft.report.json
-          upload-artifact: false
+          format: cyclonedx-json
+          upload-artifact: true
 
       - name: Upload all reports📊
-        uses: actions/upload-artifact@v5.0.0
+        uses: github/codeql-action/upload-sarif@v4
         with:
-          name: security-reports
-          path: |
-            ${{ github.workspace }}/*.report.json
-            ${{ github.workspace }}/snyk.json
+          sarif_file: |
+            ${{ github.workspace }}/scout.sarif
+            ${{ github.workspace }}/trivy.sarif
+            ${{ github.workspace }}/grype.sarif
+            ${{ github.workspace }}/snyk.sarif
+            ${{ github.workspace }}/dockle.sarif
+          category: container-security-scan
 
       - name: Push the Docker images to registries💾
         run: |
@@ -178,7 +183,7 @@ jobs:
           docker tag ghcr.io/ammnt/angie:${{ env.APP_VERSION }} ammnt/angie:latest
           docker push ghcr.io/ammnt/angie --all-tags
           docker push ammnt/angie --all-tags
-          DIGEST=$(docker inspect -f='{{index .RepoDigests 0}}' ghcr.io/ammnt/angie:${{ env.APP_VERSION }} | \
+          DIGEST=$(docker inspect -f='{{index .RepoDigests 0}}' ghcr.io/ammnt/angie:${{ env.APP_VERSION }} \
             | cut -d'@' -f2)
           echo "DIGEST=$DIGEST" >> $GITHUB_ENV
 
