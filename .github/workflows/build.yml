@@ -191,7 +191,7 @@ jobs:
           format: cyclonedx-json
           upload-artifact: true
           dependency-snapshot: true
-          github-token: ${{ secrets.SNYK_TOKEN }}
+          github-token: ${{ secrets.GH_TOKEN }}
 
       - name: Push the Docker images to registries💾
         run: |
@@ -211,7 +211,7 @@ jobs:
           subject-digest: ${{ env.DIGEST }}
           push-to-registry: true
           show-summary: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GH_TOKEN }}
 
       - name: Sign and check published Docker images🔐
         env:
