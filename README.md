@@ -1,6 +1,6 @@
 # 🚀 Distroless Angie: Hardened & Optimized image
 
-[![Build and Push](https://github.com/ammnt/angie/actions/workflows/build.yml/badge.svg)](https://github.com/ammnt/angie/actions/workflows/build.yml)
+[![CI/CD](https://github.com/ammnt/angie/actions/workflows/build.yml/badge.svg)](https://github.com/ammnt/angie/actions/workflows/build.yml)
 ![Version](https://img.shields.io/github/v/release/ammnt/angie)
 [![GitHub stars](https://img.shields.io/github/stars/ammnt/angie.svg)](https://github.com/ammnt/angie/stargazers)
 ![Feature](https://img.shields.io/badge/feature-distroless-blue)
