@@ -1,12 +1,17 @@
 # Build arguments for version pinning and reproducibility
-ARG BASE_VERSION
-ARG BASE_HASH
-FROM alpine:${BASE_VERSION}@sha256:${BASE_HASH} AS builder
-ARG OPENSSL_VERSION
-ARG APP_VERSION
-ARG PCRE_VERSION
-ARG ZLIB_VERSION
-ARG BUILD_DATE
+# ARG BASE_VERSION
+# ARG BASE_HASH
+# FROM alpine:${BASE_VERSION}@sha256:${BASE_HASH} AS builder
+# ARG OPENSSL_VERSION
+# ARG APP_VERSION
+# ARG PCRE_VERSION
+# ARG ZLIB_VERSION
+# ARG BUILD_DATE
+FROM alpine:3.22.2@sha256:4b7ce07002c69e8f3d704a9c5d6fd3053be500b7f1c69fc0d80990c2ad8dd412 AS builder
+ARG OPENSSL_VERSION=3.6.0
+ARG APP_VERSION=1.10.3
+ARG PCRE_VERSION=10.47
+ARG ZLIB_VERSION=2.2.5
 
 WORKDIR /tmp
 # System setup and dependency installation
@@ -170,18 +175,19 @@ RUN set -e \
     # Verify binary and dependencies
     && file /usr/sbin/angie && ldd /usr/sbin/angie || true \
     # Compress binary with UPX (minimal memory overhead)
-    && upx --best --lzma /usr/sbin/angie && rm -rf /tmp/* \
+    && upx --best --lzma /usr/sbin/angie \
     && grep -E "(root|angie)" /etc/passwd > /tmp/passwd \
     && grep -E "(root|angie)" /etc/group > /tmp/group \
-    && grep -E "(root|angie)" /etc/shadow > /tmp/shadow
+    && grep -E "(root|angie)" /etc/shadow > /tmp/shadow \
+    && rm -rf /tmp/*
 
 # Final distroless image
 FROM scratch
 
 # Copy minimal runtime dependencies from builder
+WORKDIR /tmp
 COPY --from=builder /tmp/passwd /tmp/group /tmp/shadow /etc/
 COPY --from=builder /sbin/tini-static /sbin/tini
-COPY --from=builder /tmp /tmp
 COPY --from=builder --chown=angie:angie /usr/sbin/angie /usr/sbin/angie
 COPY --from=builder --chown=angie:angie /etc/angie /etc/angie
 # Copy configuration files
