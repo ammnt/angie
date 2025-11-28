@@ -31,6 +31,7 @@ RUN set -e \
     # Update CA certificates for SSL verification
     && update-ca-certificates \
     # Clone Angie webserver and remove default HTML content
+    && git config --global advice.detachedHead false \
     && git clone -q --depth 1 --recursive -j8 --single-branch -b "Angie-${APP_VERSION}" https://github.com/webserver-llc/angie && rm -rf /tmp/angie/html/* \
     # Clone OpenSSL with HTTP/3 and QUIC support
     && git clone -q --depth 1 --recursive -j8 --single-branch -b "openssl-${OPENSSL_VERSION}" https://github.com/openssl/openssl \
