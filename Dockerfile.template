@@ -15,7 +15,7 @@ RUN set -e \
     # Create non-root user for security (angie:angie)
     && addgroup --system --gid "${GID}" angie && adduser --disabled-password --shell /bin/false --ingroup angie --uid "${UID}" --no-create-home angie \
     # Update system and install build dependencies
-    && apk -U upgrade && apk add --no-cache \
+    && apk -U -q upgrade && apk add -q --no-cache \
         gcc=14.2.0-r6 \
         make=4.4.1-r3 \
         git=2.49.1-r0 \
@@ -31,15 +31,15 @@ RUN set -e \
     # Update CA certificates for SSL verification
     && update-ca-certificates \
     # Clone Angie webserver and remove default HTML content
-    && git clone --depth 1 --recursive -j8 --single-branch -b "Angie-${APP_VERSION}" https://github.com/webserver-llc/angie && rm -rf /tmp/angie/html/* \
+    && git clone -q --depth 1 --recursive -j8 --single-branch -b "Angie-${APP_VERSION}" https://github.com/webserver-llc/angie && rm -rf /tmp/angie/html/* \
     # Clone OpenSSL with HTTP/3 and QUIC support
-    && git clone --depth 1 --recursive -j8 --single-branch -b "openssl-${OPENSSL_VERSION}" https://github.com/openssl/openssl \
+    && git clone -q --depth 1 --recursive -j8 --single-branch -b "openssl-${OPENSSL_VERSION}" https://github.com/openssl/openssl \
     # Clone PCRE2 for regex with JIT support
-    && git clone --depth 1 --recursive -j8 --single-branch -b "pcre2-${PCRE_VERSION}" https://github.com/PCRE2Project/pcre2 \
+    && git clone -q --depth 1 --recursive -j8 --single-branch -b "pcre2-${PCRE_VERSION}" https://github.com/PCRE2Project/pcre2 \
     # Clone zlib-ng for modern compression performance
-    && git clone --depth 1 --recursive -j8 --single-branch -b "${ZLIB_VERSION}" https://github.com/zlib-ng/zlib-ng.git \
+    && git clone -q --depth 1 --recursive -j8 --single-branch -b "${ZLIB_VERSION}" https://github.com/zlib-ng/zlib-ng.git \
     # Clone Brotli compression module
-    && git clone --depth 1 --recurse-submodules -j8 https://github.com/google/ngx_brotli \
+    && git clone -q --depth 1 --recurse-submodules -j8 https://github.com/google/ngx_brotli \
     # Security hardening: Remove server headers and version information
     && sed -ie 's@"nginx/"@" "@g' /tmp/angie/src/core/nginx.h \
     && sed -ie 's@"Angie/"@" "@g' /tmp/angie/src/core/angie.h \
