@@ -9,7 +9,7 @@
 # Specific files
 Dockerfile.template linguist-language=Dockerfile linguist-detectable
 # angie.conf linguist-language=Nginx linguist-detectable
-# angie_http3.conf linguist-language=Nginx linguist-detectable
+# example.conf linguist-language=Nginx linguist-detectable
 # angie-seccomp.json linguist-language=JSON linguist-detectable
 # angie.toml linguist-language=TOML linguist-detectable
 # cosign.pub linguist-language=Text linguist-detectable
