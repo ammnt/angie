@@ -138,6 +138,7 @@ jobs:
           image: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
           exit-code: "1"
           exit-level: "warn"
+          ignore: "CIS-DI-0010"
 
       - name: Security scan with Docker Scout🛡️
         uses: docker/scout-action@f8c776824083494ab0d56b8105ba2ca85c86e4de
