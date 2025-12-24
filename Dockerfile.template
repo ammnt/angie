@@ -11,8 +11,11 @@ ARG UID
 ARG GID
 
 WORKDIR /tmp
+# System setup and dependency installation
 RUN set -e \
+    # Create non-root user for security (angie:angie)
     && addgroup --system --gid "${GID}" angie && adduser --disabled-password --shell /bin/false --ingroup angie --uid "${UID}" --no-create-home angie \
+    # Update system and install build dependencies
     && apk -U -q upgrade && apk add -q --no-cache \
         gcc=15.2.0-r2 \
         make=4.4.1-r3 \
@@ -28,25 +31,37 @@ RUN set -e \
         cmake=4.1.3-r0 \
         zstd-dev=1.5.7-r2 \
         zstd-static=1.5.7-r2 \
+    # Update CA certificates for SSL verification
     && update-ca-certificates \
+    # Clone Angie webserver and remove default HTML content
     && git config --global advice.detachedHead false \
     && git clone -q --depth 1 --recursive -j8 --single-branch -b "Angie-${APP_VERSION}" https://github.com/webserver-llc/angie && rm -rf /tmp/angie/html/* \
+    # Clone OpenSSL with HTTP/3 and QUIC support
     && git clone -q --depth 1 --recursive -j8 --single-branch -b "feature/ech" https://github.com/openssl/openssl \
+    # Clone PCRE2 for regex with JIT support
     && git clone -q --depth 1 --recursive -j8 --single-branch -b "pcre2-${PCRE_VERSION}" https://github.com/PCRE2Project/pcre2 \
+    # Clone zlib-ng for modern compression performance
     && git clone -q --depth 1 --recursive -j8 --single-branch -b "${ZLIB_VERSION}" https://github.com/zlib-ng/zlib-ng \
+    # Clone Brotli compression module
     && git clone -q --depth 1 --recurse-submodules -j8 https://github.com/google/ngx_brotli \
+    # Clone ZSTD compression module
     && git clone -q --depth 1 --recurse -j8 --single-branch -b "${ZSTD_VERSION}" https://github.com/tokers/zstd-nginx-module \
+    # Security hardening: Remove server headers and version information
     && sed -ie 's@"nginx/"@" "@g' /tmp/angie/src/core/nginx.h \
     && sed -ie 's@"Angie/"@" "@g' /tmp/angie/src/core/angie.h \
     && sed -ie 's@"Angie version: "@" "@g' /tmp/angie/src/core/nginx.c \
     && sed -ie 's@"nginx version: "@" "@g' /tmp/angie/src/core/nginx.c \
+    # Remove Server header from HTTP responses
     && sed -ie 's@r->headers_out.server == NULL@0@g' \
         /tmp/angie/src/http/ngx_http_header_filter_module.c \
         /tmp/angie/src/http/v2/ngx_http_v2_filter_module.c \
         /tmp/angie/src/http/v3/ngx_http_v3_filter_module.c \
+    # Remove default footer from error pages
     && sed -ie 's@<hr><center>Angie</center>@@g' /tmp/angie/src/http/ngx_http_special_response.c \
+    # Anonymize version strings in source code
     && sed -ie 's@NGINX_VERSION      ".*"@NGINX_VERSION      " "@g' /tmp/angie/src/core/nginx.h \
     && sed -ie 's@ANGIE_VERSION      ".*"@ANGIE_VERSION      " "@g' /tmp/angie/src/core/angie.h \
+    # Prioritize ChaCha20 cipher for better performance on mobile devices
     && sed -ie 's/SSL_OP_CIPHER_SERVER_PREFERENCE);/SSL_OP_CIPHER_SERVER_PREFERENCE | SSL_OP_PRIORITIZE_CHACHA);/g' /tmp/angie/src/event/ngx_event_openssl.c
 
 # Build Brotli compression library with optimizations
