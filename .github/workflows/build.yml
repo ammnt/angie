@@ -130,7 +130,7 @@ jobs:
         run: |
           wget -q https://github.com/wagoodman/dive/releases/download/v${{ env.DIVE_VERSION }}/dive_${{ env.DIVE_VERSION }}_linux_amd64.tar.gz
           tar xzf dive_${{ env.DIVE_VERSION }}_linux_amd64.tar.gz -C /usr/local/bin
-          dive ./dive-ci.yml ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
+          dive --config ./dive-ci.yml ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
 
       - name: Security scan with Dockle🛡️
         uses: goodwithtech/dockle-action@e30e6af832aad6ea7dca2a248d31a85eab6dbd68
