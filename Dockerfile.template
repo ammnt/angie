@@ -173,7 +173,7 @@ RUN set -e \
     && ldd /usr/sbin/angie || true \
     && strings /usr/sbin/angie | grep "zlib-ng" \
     && file /usr/sbin/angie | grep "statically" \
-    && ls -lash /usr/sbin/angie && rm -rf /tmp/* \
+    && ls -lh /usr/sbin/angie && rm -rf /tmp/* \
     && grep -E "(root|angie)" /etc/passwd > /tmp/passwd \
     && grep -E "(root|angie)" /etc/group > /tmp/group \
     && grep -E "(root|angie)" /etc/shadow > /tmp/shadow
