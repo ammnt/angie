@@ -165,11 +165,14 @@ RUN set -e \
     && strip --strip-all /usr/sbin/angie \
     && upx -q --best --lzma /usr/sbin/angie \
     # Set proper permissions
-    && chown -R "${UID}:${GID}" /etc/angie && chmod -R g+w /etc/angie \
-    && rm -rf /tmp/* \
+    && chown -R "${UID}:${GID}" /etc/angie && rm -rf /tmp/* \
     && grep -E "(root|angie)" /etc/passwd > /tmp/passwd \
     && grep -E "(root|angie)" /etc/group > /tmp/group \
-    && grep -E "(root|angie)" /etc/shadow > /tmp/shadow
+    && grep -E "(root|angie)" /etc/shadow > /tmp/shadow \
+    && find /etc/angie -type d -exec chmod 550 {} \; \
+    && find /etc/angie -type f -name "*.conf" -exec chmod 440 {} \; \
+    && find /etc/angie -type f -name "*.types" -exec chmod 440 {} \; \
+    && chmod 644 /tmp/passwd /tmp/group && chmod 640 /tmp/shadow
 
 # Final distroless image
 FROM scratch
@@ -181,8 +184,8 @@ ARG VCS_REF
 
 # Copy minimal runtime dependencies from builder
 WORKDIR /tmp
-COPY --from=builder /tmp/passwd /tmp/group /tmp/shadow /etc/
-COPY --from=builder --chown="${UID}:${GID}" /usr/sbin/angie /usr/sbin/angie
+COPY --from=builder --chown="0:0" /tmp/passwd /tmp/group /tmp/shadow /etc/
+COPY --from=builder --chown="${UID}:${GID}" --chmod="550" /usr/sbin/angie /usr/sbin/angie
 COPY --from=builder --chown="${UID}:${GID}" /etc/angie /etc/angie
 # Copy configuration files
 COPY --chown="${UID}:${GID}" ./angie.conf /etc/angie/angie.conf
