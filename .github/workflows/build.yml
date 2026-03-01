@@ -58,7 +58,7 @@ jobs:
 
       - name: Build Docker image🐳
         id: build
-        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
         env:
           DOCKER_BUILD_RECORD_UPLOAD: false
           DOCKER_BUILD_CHECKS_ANNOTATIONS: false
@@ -150,7 +150,7 @@ jobs:
 
       - name: Trivy scan🛡️
         if: matrix.scanner == 'trivy'
-        uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8
+        uses: aquasecurity/trivy-action@e368e328979b113139d6f9068e03accaed98a518
         with:
           image-ref: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
           scan-type: image
@@ -163,7 +163,7 @@ jobs:
 
       - name: Grype scan🛡️
         if: matrix.scanner == 'grype'
-        uses: anchore/scan-action@8d2fce09422cd6037e577f4130e9b925e9a37175
+        uses: anchore/scan-action@7037fa011853d5a11690026fb85feee79f4c946c
         with:
           image: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
           fail-build: false
@@ -185,7 +185,7 @@ jobs:
 
       - name: Generate SBOM with Syft📋
         if: matrix.scanner == 'syft'
-        uses: anchore/sbom-action@deef08a0db64bfad603422135db61477b16cef56
+        uses: anchore/sbom-action@17ae1740179002c89186b61233e0f892c3118b11
         with:
           syft-version: v${{ env.SYFT_VERSION }}
           image: ghcr.io/ammnt/angie:${{ env.APP_VERSION }}
@@ -195,7 +195,7 @@ jobs:
           github-token: ${{ secrets.GH_TOKEN }}
 
       - name: Upload ${{ matrix.scanner }} report📁
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
         with:
           name: ${{ matrix.scanner }}-report
           path: |
@@ -231,7 +231,7 @@ jobs:
 
       - name: Attest image provenance📜
         continue-on-error: true
-        uses: actions/attest-build-provenance@96278af6caaf10aea03fd8d33a09a777ca52d62f
+        uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           subject-digest: ${{ needs.build.outputs.digest }}
