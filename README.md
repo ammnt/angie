@@ -111,7 +111,7 @@ angie/
 ├── ⚙️ default.conf                      # Default Angie configuration
 ├── 🐳 dive-ci.yml                       # Dive configuration for Docker image analysis
 ├── 🐳 Dockerfile.template               # Dockerfile template (dynamic generation)
-├── 📄 example.conf                      # Example Angie configuration
+├── 📄 example.conf                      # Example Angie configuration for HTTP/3
 ├── ✅ hadolint.yaml                     # Hadolint configuration (Dockerfile linter)
 ├── ⚖️ LICENSE                           # License agreement
 ├── 🚀 angie.conf                        # Main Angie configuration file
