@@ -11,14 +11,6 @@ permissions:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  COSIGN_VERSION: "3.0.5"
-  BUILDX_VERSION: "0.32.1"
-  BUILDKIT_VERSION: "0.28.1"
-  MINT_VERSION: "1.41.8"
-  DIVE_VERSION: "0.13.1"
-  GRYPE_VERSION: "0.110.0"
-  SYFT_VERSION: "1.42.3"
-  TRIVY_VERSION: "0.69.3"
   DOCKER_BUILDKIT: 1
   BUILDKIT_PROGRESS: quiet
   # BUILDKIT_PROGRESS: plain
@@ -38,11 +30,6 @@ jobs:
       base_version: ${{ steps.load_env.outputs.BASE_VERSION }}
       base_hash: ${{ steps.load_env.outputs.BASE_HASH }}
       openssl_version: ${{ steps.load_env.outputs.OPENSSL_VERSION }}
-      pcre_version: ${{ steps.load_env.outputs.PCRE_VERSION }}
-      zlib_version: ${{ steps.load_env.outputs.ZLIB_VERSION }}
-      zstd_version: ${{ steps.load_env.outputs.ZSTD_VERSION }}
-      uid: ${{ steps.load_env.outputs.UID }}
-      gid: ${{ steps.load_env.outputs.GID }}
       build_date: ${{ steps.load_env.outputs.BUILD_DATE }}
       vcs_ref: ${{ steps.load_env.outputs.VCS_REF }}
 
@@ -60,8 +47,26 @@ jobs:
               echo "$key=$value" >> $GITHUB_OUTPUT
             fi
           done < .env
+
+          fetch_ver() {
+            curl -sSfL "https://api.github.com/repos/$1/releases/latest" | \
+            grep '"tag_name":' | \
+            sed -E 's/.*"v?([0-9][^"]+)".*/\1/'
+          }
+
+          for pair in "COSIGN_VERSION:sigstore/cosign" "BUILDX_VERSION:docker/buildx" \
+                      "BUILDKIT_VERSION:moby/buildkit" "MINT_VERSION:mintoolkit/mint" \
+                      "DIVE_VERSION:wagoodman/dive" "GRYPE_VERSION:anchore/grype" \
+                      "SYFT_VERSION:anchore/syft" "TRIVY_VERSION:aquasecurity/trivy"; do
+            IFS=':' read -r var repo <<< "$pair"
+            ver=$(fetch_ver "$repo")
+            echo "$var=$ver" >> $GITHUB_OUTPUT
+            echo "$var=$ver" >> $GITHUB_ENV
+          done
+
           echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_OUTPUT
           echo "VCS_REF=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          printenv | sort -n
 
       - name: Login to GHCR🔑
         uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2
@@ -97,12 +102,7 @@ jobs:
             BASE_HASH=${{ steps.load_env.outputs.BASE_HASH }}
             OPENSSL_VERSION=${{ steps.load_env.outputs.OPENSSL_VERSION }}
             APP_VERSION=${{ steps.load_env.outputs.APP_VERSION }}
-            PCRE_VERSION=${{ steps.load_env.outputs.PCRE_VERSION }}
-            ZLIB_VERSION=${{ steps.load_env.outputs.ZLIB_VERSION }}
-            ZSTD_VERSION=${{ steps.load_env.outputs.ZSTD_VERSION }}
             VCS_REF=${{ steps.load_env.outputs.VCS_REF }}
-            UID=${{ steps.load_env.outputs.UID }}
-            GID=${{ steps.load_env.outputs.GID }}
             BUILD_DATE=${{ steps.load_env.outputs.BUILD_DATE }}
 
       - name: Slim and push image with Mint🔧
@@ -117,11 +117,26 @@ jobs:
             --include-path=/etc/shadow --include-path=/etc/group
           docker push ghcr.io/ammnt/angie --all-tags
 
+      - name: Explore with Dive🔍
+        env:
+          CI: true
+        run: |
+          docker pull ghcr.io/ammnt/angie:${{ needs.build.outputs.app_version }}
+          wget -q https://github.com/wagoodman/dive/releases/download/v${{ env.DIVE_VERSION }}/dive_${{ env.DIVE_VERSION }}_linux_amd64.tar.gz
+          tar xzf dive_${{ env.DIVE_VERSION }}_linux_amd64.tar.gz -C /usr/local/bin
+          dive --config ./dive-ci.yml -j dive.report.json ghcr.io/ammnt/angie:${{ needs.build.outputs.app_version }}
+
       - name: Upload Mint report📁
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: mint-report
           path: slim.report.json
+
+      - name: Upload Dive report📁
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: dive-report
+          path: dive.report.json
 
       - name: Get image digest🔢
         id: digest
@@ -139,7 +154,7 @@ jobs:
       id-token: write
     strategy:
       matrix:
-        scanner: [hadolint, dive, dockle, scout, trivy, grype, snyk, syft]
+        scanner: [ hadolint, dockle, scout, trivy, grype, snyk, syft ]
       fail-fast: false
     steps:
       - name: Checkout repository📥
@@ -159,16 +174,6 @@ jobs:
           format: sarif
           output-file: hadolint.sarif
           config: ./hadolint.yaml
-
-      - name: Explore with Dive🔍
-        if: matrix.scanner == 'dive'
-        env:
-          CI: true
-        run: |
-          docker pull ghcr.io/ammnt/angie:${{ needs.build.outputs.app_version }}
-          wget -q https://github.com/wagoodman/dive/releases/download/v${{ env.DIVE_VERSION }}/dive_${{ env.DIVE_VERSION }}_linux_amd64.tar.gz
-          tar xzf dive_${{ env.DIVE_VERSION }}_linux_amd64.tar.gz -C /usr/local/bin
-          dive --config ./dive-ci.yml ghcr.io/ammnt/angie:${{ needs.build.outputs.app_version }}
 
       - name: Dockle scan🛡️
         if: matrix.scanner == 'dockle'
@@ -245,9 +250,6 @@ jobs:
           name: ${{ matrix.scanner }}-report
           path: |
             *.sarif
-            *.json
-            *.spdx
-            *.cyclonedx
 
       - name: Upload SARIF to Code Scanning🔬
         if: hashFiles('*.sarif') != ''
@@ -257,7 +259,7 @@ jobs:
           category: ${{ matrix.scanner }}
 
   finalize:
-    needs: [build, security-scans]
+    needs: [ build, security-scans ]
     runs-on: ubuntu-24.04
     permissions:
       contents: read

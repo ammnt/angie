@@ -8,16 +8,16 @@
 ![GitHub Maintained](https://img.shields.io/badge/open%20source-yes-orange)
 ![GitHub Maintained](https://img.shields.io/badge/maintained-yes-yellow)
 
-> **Production-ready, security-focused Angie image with HTTP/3, QUIC and PQC support.**
+> **Production-ready, security-focused Angie image with HTTP/3, QUIC, ECH and PQC support.**
 
 > [!IMPORTANT]
-> QuicTLS is now deprecated. I use OpenSSL, since this library natively supports OCSP, PQC and QUIC⚠️
+> QuicTLS is now deprecated. I use OpenSSL, since this library natively supports OCSP, PQC, ECH and QUIC⚠️
 
 > [!IMPORTANT]
 > NJS module has been removed due to security vulnerabilities in libxml2/libxslt dependencies⚠️
 
 > [!TIP]
-> You can find an example [configuration file](example.conf) in the repository for successfully configuring HTTP/3 and PQC💡
+> You can find an example [configuration file](example.conf) in the repository for successfully configuring HTTP/3, ECH and PQC💡
 
 > [!IMPORTANT]
 > UID/GID changed to 10001 - it's [recommended](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/) for Kubernetes and prevents conflicts with system users⚠️
@@ -93,6 +93,42 @@ spec:
 ...
 ```
 
+### Repository structure
+```bash
+angie/
+├── 🚀 angie.conf                        # Main Angie configuration file
+├── 🛡️ angie-seccomp.json                # Seccomp profile for Angie security
+├── 📦 angie.toml                        # Additional Angie configuration (TOML format)
+├── 📜 CODE_OF_CONDUCT.md                # Code of Conduct for contributors
+├── 🤝 CONTRIBUTING.md                   # Contributing guidelines
+├── 🔑 cosign.pub                        # Public key for image signing (Sigstore/cosign)
+├── ⚙️ default.conf                      # Default Angie configuration
+├── 🐳 dive-ci.yml                       # Dive configuration for Docker image analysis
+├── 🐳 Dockerfile.template               # Dockerfile template (dynamic generation)
+├── 🙈 .dockerignore                     # Files to exclude from Docker build context
+├── 🔧 .env                              # Environment variables configuration
+├── 📄 example.conf                      # Example Angie configuration
+├── ⚙️ .gitattributes                    # Git attributes configuration
+├── 📁 .github/                          # GitHub-specific configuration
+│   ├── 📋 dependabot.yml                # Automated dependency updates
+│   ├── 📁 ISSUE_TEMPLATE/               # Issue creation templates
+│   │   ├── 🐛 bug_report.md             # Bug report template
+│   │   ├── ⚙️ config.yml                # Issue templates configuration
+│   │   └── 💡 feature_request.md        # Feature request template
+│   ├── 🏷️ labeler.yml                   # PR labeler configuration
+│   ├── 📝 PULL_REQUEST_TEMPLATE.md      # Pull Request template
+│   └── 📁 workflows/                    # GitHub Actions CI/CD pipelines
+│       ├── 🔨 build.yml                 # Build and testing workflow
+│       ├── 🔒 codeql.yml                # Static security analysis (CodeQL)
+│       └── 🏷️ label.yml                 # Workflow for triage PR and apply labels
+├── 🙈 .gitignore                        # Git ignore rules
+├── ✅ hadolint.yaml                     # Hadolint configuration (Dockerfile linter)
+├── ⚖️ LICENSE                           # License agreement
+├── 📖 README.md                         # Main project documentation
+├── 🔒 SECURITY.md                       # Security policy and vulnerability reporting
+└── 🔍 trivy.yaml                        # Trivy configuration (vulnerability scanning)
+```
+
 ## 🔥 Why Choose This Image?
 
 ### **GCC hardened compilation suite (-fhardened) providing comprehensive security:**
@@ -114,6 +150,7 @@ spec:
 - **Native QUIC and HTTP/3 support** - OpenSSL and QUIC without patches or experimental implementations (RFC 9114, RFC 9000)
 - **Native PQC support** - hybrid post-quantum key exchange algorithms in elliptic curves (NIST PQC Standardization, FIPS 203/204/205)
 - **Native TLS 1.3 with 0-RTT** (RFC 8446, RFC 9001)
+- **Native support for the Encrypted Client Hello (ECH)** - extension of the TLS 1.3 protocol (RFC 9849)
 
 ### **Supply Chain Integrity**
 - **Signed images** - signatures and **provenance attestation** (SLSA Level 3 requirements, in-toto attestations)
