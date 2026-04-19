@@ -4,17 +4,12 @@ ARG BASE_HASH
 FROM alpine:${BASE_VERSION}@sha256:${BASE_HASH} AS builder
 ARG OPENSSL_VERSION
 ARG APP_VERSION
-ARG PCRE_VERSION
-ARG ZLIB_VERSION
-ARG ZSTD_VERSION
-ARG UID
-ARG GID
 
 WORKDIR /tmp
 # System setup and dependency installation
 RUN set -eu \
     # Create non-root user for security (angie:angie)
-    && addgroup --system --gid "${GID}" angie && adduser --disabled-password --shell /bin/false --ingroup angie --uid "${UID}" --no-create-home angie \
+    && addgroup --system --gid "10001" angie && adduser --disabled-password --shell /bin/false --ingroup angie --uid "10001" --no-create-home angie \
     # Update system and install build dependencies
     && apk -U -q upgrade && apk add -q --no-cache \
         gcc=15.2.0-r2 \
@@ -22,7 +17,7 @@ RUN set -eu \
         git=2.52.0-r0 \
         mimalloc2-dev=2.2.3-r2 \
         build-base=0.5-r3 \
-        ca-certificates=20251003-r0 \
+        ca-certificates=20260413-r0 \
         linux-headers=6.16.12-r0 \
         tzdata=2026a-r0 \
         upx=5.0.2-r0 \
@@ -32,10 +27,17 @@ RUN set -eu \
         zstd-static=1.5.7-r2 \
         brotli-dev=1.2.0-r0  \
         brotli-static=1.2.0-r0 \
+        curl=8.17.0-r1 \
+        bash=5.3.3-r1 \
     # Update CA certificates for SSL verification
-    && update-ca-certificates \
+    && update-ca-certificates
+
+SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
+RUN git config --global advice.detachedHead false \
+    && PCRE_VERSION=$(curl -sSfL "https://api.github.com/repos/PCRE2Project/pcre2/releases/latest" | grep '"tag_name":' | sed -E 's/.*"pcre2\-([^"]+)".*/\1/') \
+    && ZLIB_VERSION=$(curl -sSfL "https://api.github.com/repos/zlib-ng/zlib-ng/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') \
+    && ZSTD_VERSION=$(curl -sSfL "https://api.github.com/repos/tokers/zstd-nginx-module/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/') \
     # Clone Angie webserver and remove default HTML content
-    && git config --global advice.detachedHead false \
     && git clone -q --depth 1 --recursive -j8 --single-branch -b "Angie-${APP_VERSION}" https://github.com/webserver-llc/angie && rm -rf /tmp/angie/html/* \
     # Clone OpenSSL with HTTP/3 and QUIC support
     && git clone -q --depth 1 --recursive -j8 --single-branch -b "openssl-${OPENSSL_VERSION}" https://github.com/openssl/openssl \
@@ -57,8 +59,7 @@ RUN set -eu \
 
 # Build zlib-ng and Brotli compression libraries with optimizations
 WORKDIR /tmp/zlib-ng
-RUN set -eu \
-    && mkdir -p /tmp/ngx_brotli/deps/brotli/out \
+RUN mkdir -p /tmp/ngx_brotli/deps/brotli/out \
     # Configure Brotli with performance optimizations
     && cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF \
         -DCMAKE_C_FLAGS="-m64 -march=x86-64 -mtune=generic -flto -funroll-loops -ffunction-sections -fdata-sections -Wl,--gc-sections" \
@@ -73,8 +74,7 @@ RUN set -eu \
 
 # Configure and build Angie with security hardening and optimizations
 WORKDIR /tmp/angie
-RUN set -eu \
-    && ./configure \
+RUN ./configure \
         --with-debug \
         # Installation paths
         --prefix="/etc/angie" \
@@ -164,7 +164,7 @@ RUN set -eu \
     && strip --strip-all /usr/sbin/angie \
     && upx -q --best --lzma /usr/sbin/angie \
     # Set proper permissions
-    && chown -R "${UID}:${GID}" /etc/angie && rm -rf /tmp/* \
+    && chown -R "10001:10001" /etc/angie && rm -rf /tmp/* \
     && grep -E "(root|angie)" /etc/passwd > /tmp/passwd \
     && grep -E "(root|angie)" /etc/group > /tmp/group \
     && grep -E "(root|angie)" /etc/shadow > /tmp/shadow \
@@ -177,18 +177,16 @@ RUN set -eu \
 FROM scratch
 ARG APP_VERSION
 ARG BUILD_DATE
-ARG UID
-ARG GID
 ARG VCS_REF
 
 # Copy minimal runtime dependencies from builder
 WORKDIR /tmp
 COPY --from=builder --chown="0:0" /tmp/passwd /tmp/group /tmp/shadow /etc/
-COPY --from=builder --chown="${UID}:${GID}" --chmod="550" /usr/sbin/angie /usr/sbin/angie
-COPY --from=builder --chown="${UID}:${GID}" /etc/angie /etc/angie
+COPY --from=builder --chown="10001:10001" --chmod="550" /usr/sbin/angie /usr/sbin/angie
+COPY --from=builder --chown="10001:10001" /etc/angie /etc/angie
 # Copy configuration files
-COPY --chown="${UID}:${GID}" ./angie.conf /etc/angie/angie.conf
-COPY --chown="${UID}:${GID}" ./default.conf /etc/angie/conf.d/default.conf
+COPY --chown="10001:10001" ./angie.conf /etc/angie/angie.conf
+COPY --chown="10001:10001" ./default.conf /etc/angie/conf.d/default.conf
 
 # Expose HTTP, HTTPS, and QUIC ports
 EXPOSE 8080/tcp 8443/tcp 8443/udp
@@ -215,7 +213,7 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=2 \
 STOPSIGNAL SIGQUIT
 
 # Run as non-root user for security
-USER "${UID}:${GID}"
+USER "10001:10001"
 
 # Start Angie in foreground mode
 ENTRYPOINT ["/usr/sbin/angie", "-g", "daemon off;"]
