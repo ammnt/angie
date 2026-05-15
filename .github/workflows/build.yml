@@ -76,21 +76,21 @@ jobs:
           echo "VCS_REF=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
       - name: Login to GHCR🔑
-        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GH_TOKEN }}
 
       - name: Setup Docker Buildx🏗️
-        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd
         with:
           version: v${{ env.BUILDX_VERSION }}
           driver-opts: image=moby/buildkit:v${{ env.BUILDKIT_VERSION }}-rootless
 
       - name: Build Docker image🐳
         id: build
-        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f
         env:
           DOCKER_BUILD_RECORD_UPLOAD: false
           DOCKER_BUILD_CHECKS_ANNOTATIONS: false
@@ -166,7 +166,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       - name: Login to Docker Hub🔑
-        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -191,7 +191,7 @@ jobs:
 
       - name: Docker Scout scan🛡️
         if: matrix.scanner == 'scout'
-        uses: docker/scout-action@f8c776824083494ab0d56b8105ba2ca85c86e4de
+        uses: docker/scout-action@bacf462e8d090c09660de30a6ccc718035f961e3
         with:
           command: cves,sbom
           image: ghcr.io/ammnt/angie:${{ needs.build.outputs.app_version }}
@@ -203,7 +203,7 @@ jobs:
 
       - name: Trivy scan🛡️
         if: matrix.scanner == 'trivy'
-        uses: aquasecurity/trivy-action@e368e328979b113139d6f9068e03accaed98a518
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
         with:
           image-ref: ghcr.io/ammnt/angie:${{ needs.build.outputs.app_version }}
           scan-type: image
@@ -218,7 +218,7 @@ jobs:
 
       - name: Grype scan🛡️
         if: matrix.scanner == 'grype'
-        uses: anchore/scan-action@7037fa011853d5a11690026fb85feee79f4c946c
+        uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2
         with:
           image: ghcr.io/ammnt/angie:${{ needs.build.outputs.app_version }}
           fail-build: false
@@ -248,7 +248,7 @@ jobs:
 
       - name: Generate SBOM with Syft📋
         if: matrix.scanner == 'syft'
-        uses: anchore/sbom-action@17ae1740179002c89186b61233e0f892c3118b11
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610
         with:
           syft-version: v${{ needs.build.outputs.syft_version }}
           image: ghcr.io/ammnt/angie:${{ needs.build.outputs.app_version }}
@@ -258,7 +258,7 @@ jobs:
           github-token: ${{ secrets.GH_TOKEN }}
 
       - name: Upload ${{ matrix.scanner }} report📁
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ${{ matrix.scanner }}-report
           path: |
@@ -282,19 +282,19 @@ jobs:
       attestations: write
     steps:
       - name: Install Cosign🔐
-        uses: sigstore/cosign-installer@faadad0cce49287aee09b3a48701e75088a2c6ad
+        uses: sigstore/cosign-installer@cad07c2e89fa2edd6e2d7bab4c1aa38e53f76003
         with:
           cosign-release: v${{ needs.build.outputs.cosign_version }}
 
       - name: Login to GHCR🔑
-        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GH_TOKEN }}
 
       - name: Login to Docker Hub🔑
-        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
