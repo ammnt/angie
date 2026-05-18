@@ -132,6 +132,7 @@ RUN ./configure \
         --with-http_v2_module \
         --with-http_v3_module \
         --with-http_gzip_static_module \
+        --with-http_acme_module \
         # Stream modules
         --with-stream \
         --with-stream_realip_module \
