@@ -11,14 +11,6 @@ permissions:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  COSIGN_VERSION: "3.0.5"
-  BUILDX_VERSION: "0.32.1"
-  BUILDKIT_VERSION: "0.28.1"
-  MINT_VERSION: "1.41.8"
-  DIVE_VERSION: "0.13.1"
-  GRYPE_VERSION: "0.110.0"
-  SYFT_VERSION: "1.42.3"
-  TRIVY_VERSION: "0.69.3"
   DOCKER_BUILDKIT: 1
   BUILDKIT_PROGRESS: quiet
   # BUILDKIT_PROGRESS: plain
@@ -38,13 +30,16 @@ jobs:
       base_version: ${{ steps.load_env.outputs.BASE_VERSION }}
       base_hash: ${{ steps.load_env.outputs.BASE_HASH }}
       openssl_version: ${{ steps.load_env.outputs.OPENSSL_VERSION }}
-      pcre_version: ${{ steps.load_env.outputs.PCRE_VERSION }}
-      zlib_version: ${{ steps.load_env.outputs.ZLIB_VERSION }}
-      zstd_version: ${{ steps.load_env.outputs.ZSTD_VERSION }}
-      uid: ${{ steps.load_env.outputs.UID }}
-      gid: ${{ steps.load_env.outputs.GID }}
       build_date: ${{ steps.load_env.outputs.BUILD_DATE }}
       vcs_ref: ${{ steps.load_env.outputs.VCS_REF }}
+      cosign_version: ${{ steps.load_env.outputs.COSIGN_VERSION }}
+      buildx_version: ${{ steps.load_env.outputs.BUILDX_VERSION }}
+      buildkit_version: ${{ steps.load_env.outputs.BUILDKIT_VERSION }}
+      mint_version: ${{ steps.load_env.outputs.MINT_VERSION }}
+      dive_version: ${{ steps.load_env.outputs.DIVE_VERSION }}
+      grype_version: ${{ steps.load_env.outputs.GRYPE_VERSION }}
+      syft_version: ${{ steps.load_env.outputs.SYFT_VERSION }}
+      trivy_version: ${{ steps.load_env.outputs.TRIVY_VERSION }}
 
     steps:
       - name: Checkout repository📥
@@ -60,6 +55,23 @@ jobs:
               echo "$key=$value" >> $GITHUB_OUTPUT
             fi
           done < .env
+
+          fetch_ver() {
+            curl -sSfL "https://api.github.com/repos/$1/releases/latest" | \
+            jq -r '.tag_name // empty' | \
+            sed -E 's/^v?([0-9][^"]+).*/\1/'
+          }
+
+          for pair in "COSIGN_VERSION:sigstore/cosign" "BUILDX_VERSION:docker/buildx" \
+                      "BUILDKIT_VERSION:moby/buildkit" "MINT_VERSION:mintoolkit/mint" \
+                      "DIVE_VERSION:wagoodman/dive" "GRYPE_VERSION:anchore/grype" \
+                      "SYFT_VERSION:anchore/syft" "TRIVY_VERSION:aquasecurity/trivy"; do
+            IFS=':' read -r var repo <<< "$pair"
+            ver=$(fetch_ver "$repo")
+            echo "$var=$ver" >> $GITHUB_OUTPUT
+            echo "$var=$ver" >> $GITHUB_ENV
+          done
+
           echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_OUTPUT
           echo "VCS_REF=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
@@ -97,18 +109,12 @@ jobs:
             BASE_HASH=${{ steps.load_env.outputs.BASE_HASH }}
             OPENSSL_VERSION=${{ steps.load_env.outputs.OPENSSL_VERSION }}
             APP_VERSION=${{ steps.load_env.outputs.APP_VERSION }}
-            PCRE_VERSION=${{ steps.load_env.outputs.PCRE_VERSION }}
-            ZLIB_VERSION=${{ steps.load_env.outputs.ZLIB_VERSION }}
-            ZSTD_VERSION=${{ steps.load_env.outputs.ZSTD_VERSION }}
             VCS_REF=${{ steps.load_env.outputs.VCS_REF }}
-            UID=${{ steps.load_env.outputs.UID }}
-            GID=${{ steps.load_env.outputs.GID }}
             BUILD_DATE=${{ steps.load_env.outputs.BUILD_DATE }}
 
       - name: Slim and push image with Mint🔧
         run: |
-          curl -sSL -o ds.tar.gz https://github.com/mintoolkit/mint/releases/download/${{ env.MINT_VERSION }}/dist_linux.tar.gz
-          tar -xf ds.tar.gz
+          curl -sSfL "https://github.com/mintoolkit/mint/releases/download/${{ env.MINT_VERSION }}/dist_linux.tar.gz" | tar -zxf -
           ./dist_linux/mint --quiet build \
             --target ghcr.io/ammnt/angie:${{ steps.load_env.outputs.APP_VERSION }} \
             --tag ghcr.io/ammnt/angie:${{ steps.load_env.outputs.APP_VERSION }} \
@@ -117,11 +123,25 @@ jobs:
             --include-path=/etc/shadow --include-path=/etc/group
           docker push ghcr.io/ammnt/angie --all-tags
 
+      - name: Explore with Dive🔍
+        env:
+          CI: true
+        run: |
+          docker pull ghcr.io/ammnt/angie:${{ steps.load_env.outputs.APP_VERSION }}
+          curl -sSfL "https://github.com/wagoodman/dive/releases/download/v${{ env.DIVE_VERSION }}/dive_${{ env.DIVE_VERSION }}_linux_amd64.tar.gz" | tar -zxf -
+          ./dive --config ./dive-ci.yml -j dive.report.json ghcr.io/ammnt/angie:${{ steps.load_env.outputs.APP_VERSION }}
+
       - name: Upload Mint report📁
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: mint-report
           path: slim.report.json
+
+      - name: Upload Dive report📁
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: dive-report
+          path: dive.report.json
 
       - name: Get image digest🔢
         id: digest
@@ -139,7 +159,7 @@ jobs:
       id-token: write
     strategy:
       matrix:
-        scanner: [hadolint, dive, dockle, scout, trivy, grype, snyk, syft]
+        scanner: [hadolint, dockle, scout, trivy, grype, snyk, syft, clair]
       fail-fast: false
     steps:
       - name: Checkout repository📥
@@ -160,21 +180,12 @@ jobs:
           output-file: hadolint.sarif
           config: ./hadolint.yaml
 
-      - name: Explore with Dive🔍
-        if: matrix.scanner == 'dive'
-        env:
-          CI: true
-        run: |
-          docker pull ghcr.io/ammnt/angie:${{ needs.build.outputs.app_version }}
-          wget -q https://github.com/wagoodman/dive/releases/download/v${{ env.DIVE_VERSION }}/dive_${{ env.DIVE_VERSION }}_linux_amd64.tar.gz
-          tar xzf dive_${{ env.DIVE_VERSION }}_linux_amd64.tar.gz -C /usr/local/bin
-          dive --config ./dive-ci.yml ghcr.io/ammnt/angie:${{ needs.build.outputs.app_version }}
-
       - name: Dockle scan🛡️
         if: matrix.scanner == 'dockle'
         uses: goodwithtech/dockle-action@e30e6af832aad6ea7dca2a248d31a85eab6dbd68
         with:
           image: ghcr.io/ammnt/angie:${{ needs.build.outputs.app_version }}
+          format: sarif
           exit-code: "1"
           exit-level: "warn"
           ignore: "CIS-DI-0010"
@@ -203,7 +214,7 @@ jobs:
           scanners: "vuln,secret"
           exit-code: "1"
           github-pat: ${{ secrets.GH_TOKEN }}
-          version: v${{ env.TRIVY_VERSION }}
+          version: v${{ needs.build.outputs.trivy_version }}
           trivy-config: trivy.yaml
 
       - name: Grype scan🛡️
@@ -214,12 +225,11 @@ jobs:
           fail-build: false
           severity-cutoff: critical
           output-format: sarif
-          grype-version: v${{ env.GRYPE_VERSION }}
+          grype-version: v${{ needs.build.outputs.grype_version }}
           output-file: grype.sarif
 
       - name: Snyk scan🛡️
         if: matrix.scanner == 'snyk'
-        continue-on-error: true
         uses: snyk/actions/docker@9adf32b1121593767fc3c057af55b55db032dc04
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -228,11 +238,20 @@ jobs:
           sarif: true
           args: --file=Dockerfile.template --sarif-file-output=snyk.sarif
 
+      - name: Clair scan🛡️
+        if: matrix.scanner == 'clair'
+        continue-on-error: true
+        uses: quay/clair-action@e5340cbfbf57d0ee596363fb98fd3d282aa71e17
+        with:
+          image-ref: ghcr.io/ammnt/angie:${{ needs.build.outputs.app_version }}
+          format: sarif
+          output: ./clair.sarif
+
       - name: Generate SBOM with Syft📋
         if: matrix.scanner == 'syft'
         uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610
         with:
-          syft-version: v${{ env.SYFT_VERSION }}
+          syft-version: v${{ needs.build.outputs.syft_version }}
           image: ghcr.io/ammnt/angie:${{ needs.build.outputs.app_version }}
           format: cyclonedx-json
           upload-artifact: true
@@ -251,6 +270,7 @@ jobs:
 
       - name: Upload SARIF to Code Scanning🔬
         if: hashFiles('*.sarif') != ''
+        continue-on-error: true
         uses: github/codeql-action/upload-sarif@0c0c5dc2f136b98cb0537075ccfa21f94cd9a63e
         with:
           sarif_file: .
@@ -268,7 +288,7 @@ jobs:
       - name: Install Cosign🔐
         uses: sigstore/cosign-installer@cad07c2e89fa2edd6e2d7bab4c1aa38e53f76003
         with:
-          cosign-release: v${{ env.COSIGN_VERSION }}
+          cosign-release: v${{ needs.build.outputs.cosign_version }}
 
       - name: Login to GHCR🔑
         uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121
@@ -291,7 +311,6 @@ jobs:
           docker push ammnt/angie --all-tags
 
       - name: Attest image provenance📜
-        # continue-on-error: true
         uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32
         with:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
@@ -301,7 +320,6 @@ jobs:
           github-token: ${{ secrets.GH_TOKEN }}
 
       - name: Sign container images✍️
-        # continue-on-error: true
         env:
           COSIGN_EXPERIMENTAL: "true"
           COSIGN_KEY: ${{ secrets.COSIGN_KEY }}
@@ -312,7 +330,6 @@ jobs:
           docker system prune -f ; rm -rf ${{ github.workspace }}/*
 
       - name: Deploy to production server🌐
-        continue-on-error: true
         uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2
         with:
           host: ${{ secrets.SERVER_HOST }}
@@ -323,3 +340,23 @@ jobs:
             cd /home/${{ secrets.SERVER_USERNAME }}/agh
             /usr/bin/docker compose pull web dns
             /usr/bin/docker compose up -d web dns
+
+  release:
+    needs: [build, security-scans, finalize]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository📥
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Create tagged release🏷️
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda
+        with:
+          tag_name: ${{ needs.build.outputs.app_version }}
+          name: ${{ needs.build.outputs.app_version }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
