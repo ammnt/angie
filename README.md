@@ -97,6 +97,7 @@ spec:
 ```bash
 angie/
 ├── 🚀 angie.conf                        # Main Angie configuration file
+├── 🔧 AGENTS.md                         # Dedicated file that guides AI coding agents
 ├── 🛡️ angie-seccomp.json                # Seccomp profile for Angie security
 ├── 📦 angie.toml                        # Additional Angie configuration (TOML format)
 ├── 📜 CODE_OF_CONDUCT.md                # Code of Conduct for contributors
