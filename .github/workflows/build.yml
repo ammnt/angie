@@ -159,8 +159,7 @@ jobs:
       id-token: write
     strategy:
       matrix:
-        scanner:
-          [hadolint, checkov, dockle, scout, trivy, grype, snyk, syft, clair]
+        scanner: [hadolint, dockle, scout, trivy, grype, snyk, syft, clair]
       fail-fast: false
     steps:
       - name: Checkout repository📥
@@ -180,19 +179,6 @@ jobs:
           format: sarif
           output-file: hadolint.sarif
           config: ./hadolint.yaml
-
-      - name: Checkov scan🛡️
-        if: matrix.scanner == 'checkov'
-        continue-on-error: true
-        uses: bridgecrewio/checkov-action@99bb2caf247dfd9f03cf984373bc6043d4e32ebf
-        with:
-          quiet: true
-          soft_fail: true
-          output_format: sarif
-          output_file_path: checkov.sarif
-          framework: dockerfile
-          file: ./Dockerfile.template
-          container_user: 10001
 
       - name: Dockle scan🛡️
         if: matrix.scanner == 'dockle'
