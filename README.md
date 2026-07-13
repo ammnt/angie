@@ -25,10 +25,10 @@
 ## 🌐 Image Variants
 
 Docker Hub:<br>
-> **ammnt/angie:latest**
+> **ammnt/angie**
 
 GitHub Container Registry:<br>
-> **ghcr.io/ammnt/angie:latest**
+> **ghcr.io/ammnt/angie**
 
 ## 📦 Quick Start
 
@@ -38,7 +38,7 @@ docker run -d \
   --name angie \
   -p 80:8080 \
   -p 443:8443 \
-  ammnt/angie:latest
+  ammnt/angie
 ```
 
 ## 🔧 Advanced Configuration
