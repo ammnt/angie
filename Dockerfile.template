@@ -164,6 +164,9 @@ RUN ./configure \
     # Security hardening: strip debug symbols and compress binary
     && strip --strip-all /usr/sbin/angie \
     && upx -q --best --lzma /usr/sbin/angie \
+    && ldd /usr/sbin/angie || true \
+    && file /usr/sbin/angie \
+    && readelf -d /usr/sbin/angie \
     # Set proper permissions
     && chown -R "10001:10001" /etc/angie && rm -rf /tmp/* \
     && grep -E "(root|angie)" /etc/passwd > /tmp/passwd \
