@@ -210,7 +210,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
 STOPSIGNAL SIGQUIT
 
 # Run as non-root user for security
-USER "10001:10001"
+USER 10001:10001
 
 # Start Angie in foreground mode
 ENTRYPOINT ["/usr/sbin/angie", "-g", "daemon off;"]
