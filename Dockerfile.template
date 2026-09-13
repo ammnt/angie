@@ -162,6 +162,7 @@ RUN ./configure \
     && upx -qq --best --lzma /usr/sbin/angie \
     && ls -lash /usr/sbin/angie \
     && file /usr/sbin/angie | grep 'statically linked' \
+    && readelf -dn /usr/sbin/angie | grep -E 'Properties|no dynamic' \
     # Set proper permissions
     && chown -R "10001:10001" /etc/angie && rm -rf /tmp/* \
     && grep -E "(root|angie)" /etc/passwd > /tmp/passwd \
