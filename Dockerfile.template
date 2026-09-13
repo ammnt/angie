@@ -157,7 +157,7 @@ RUN ./configure \
     # Build and install Angie
     && make -s -j "$(nproc)" && make -s install && make -s clean \
     # Security hardening: strip debug symbols and compress binary
-    && strings /usr/sbin/angie | grep -i "zlib-ng/zlib.h" \
+    && strings /usr/sbin/angie | grep -iE "zlib-ng/zlib.h|mimalloc_version" \
     && llvm-strip --strip-all /usr/sbin/angie \
     && upx -qq --best --lzma /usr/sbin/angie \
     && ls -lash /usr/sbin/angie \
