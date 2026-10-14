@@ -29,6 +29,7 @@ RUN addgroup --system --gid "10001" angie && adduser --disabled-password --shell
         linux-headers=7.0.0-r1 \
         upx=5.2.0-r0 \
         perl=5.42.2-r1 \
+        perl=5.42.2-r1 \
         cmake=4.2.3-r0 \
         zstd-dev=1.5.7-r2 \
         zstd-static=1.5.7-r2 \
