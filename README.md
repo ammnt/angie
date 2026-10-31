@@ -6,7 +6,7 @@
 ![Feature](https://img.shields.io/badge/feature-distroless-blue)
 [![GitHub issues open](https://img.shields.io/github/issues/ammnt/angie.svg)](https://github.com/ammnt/angie/issues)
 ![GitHub Open Source](https://img.shields.io/badge/open%20source-yes-orange)
-![GitHub Maintained](https://img.shields.io/badge/maintained-no-yellow)
+![GitHub Maintained](https://img.shields.io/badge/maintained-no-red)
 
 > **Production-ready, security-focused Angie image with HTTP/3, QUIC, ECH and PQC support.**
 
