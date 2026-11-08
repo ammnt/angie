@@ -8,7 +8,7 @@
 ![GitHub Open Source](https://img.shields.io/badge/open%20source-yes-orange)
 ![GitHub Maintained](https://img.shields.io/badge/maintained-no-red)
 
-> **Production-ready, security-focused FreeNGINX image with HTTP/3, QUIC, ECH and PQC support.**
+> **Production-ready, security-focused Angie image with HTTP/3, QUIC, ECH and PQC support.**
 
 > [!CAUTION]
 > ## 🗄️ The project is archived and no longer maintained
