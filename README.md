@@ -8,7 +8,19 @@
 ![GitHub Open Source](https://img.shields.io/badge/open%20source-yes-orange)
 ![GitHub Maintained](https://img.shields.io/badge/maintained-no-red)
 
-> **Production-ready, security-focused Angie image with HTTP/3, QUIC, ECH and PQC support.**
+> **Production-ready, security-focused FreeNGINX image with HTTP/3, QUIC, ECH and PQC support.**
+
+> [!CAUTION]
+> ## 🗄️ The project is archived and no longer maintained
+>
+> **This project has reached end-of-life and is no longer actively maintained.**
+> No further updates, bug fixes, security patches, or feature additions will be provided.
+>
+> ### 👉 Please migrate to: [github.com/ammnt/nginx](https://github.com/ammnt/nginx/)
+>
+> The successor project provides the same hardened, distroless, security-focused approach with ongoing maintenance, up-to-date dependencies, and continued security patching. We strongly recommend all users migrate to ensure they receive critical updates.
+>
+> Thank you to everyone who used this image❤️
 
 > [!IMPORTANT]
 > The QuicTLS is now deprecated. I use OpenSSL, since this library natively supports OCSP, PQC, ECH and QUIC⚠️
@@ -16,7 +28,7 @@
 > [!TIP]
 > You can find an example [configuration file](example.conf) in the repository for successfully configuring HTTP/3, ECH and PQC💡
 
-> [!IMPORTANT]
+> [!WARNING]
 > UID/GID changed to 10001 - it's [recommended](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/) for Kubernetes and prevents conflicts with system users⚠️
 
 ## 🌐 Image Variants
