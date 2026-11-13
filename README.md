@@ -34,16 +34,17 @@
 ## 🌐 Image Variants
 
 Docker Hub:<br>
-> **ammnt/angie**
+> **ammnt/angie:latest**
 
 GitHub Container Registry:<br>
-> **ghcr.io/ammnt/angie**
+> **ghcr.io/ammnt/angie:latest**
 
 ## 📦 Quick Start
 
 ### Docker Run
 ```bash
 docker run -d \
+  --init \
   --name angie \
   -p 80:8080 \
   -p 443:8443 \
@@ -63,6 +64,7 @@ services:
     user: "10001:10001"
     read_only: true
     privileged: false
+    init: true
     tmpfs:
      - /tmp:mode=1700,size=1G,noexec,nosuid,nodev,uid=10001,gid=10001
     cap_drop:
