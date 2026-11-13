@@ -141,6 +141,7 @@ angie/
 ├── 📖 README.md                         # Main project documentation
 ├── 🔄 renovate.json                     # Renovatebot config for his workflow
 ├── 🔒 SECURITY.md                       # Security policy and vulnerability reporting
+├── 🖼️ social_preview.jpg                # Image for repository’s social media preview
 └── 🔍 trivy.yaml                        # Trivy configuration (vulnerability scanning)
 ```
 
